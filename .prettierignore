@@ -1,0 +1,8 @@
+node_modules/
+/lib/
+/dist/
+module/
+eslint.config.js
+prettier.config.js
+prod.tsconfig.json
+tsconfig.json

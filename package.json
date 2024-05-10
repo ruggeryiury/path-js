@@ -1,0 +1,58 @@
+{
+  "name": "path-js",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A path utility suite that gathers several functions related to a specific path.",
+  "homepage": "https://github.com/ruggeryiury/path-js#readme",
+  "repository": "github:ruggeryiury/path-js",
+  "type": "module",
+  "main": "lib/index.js",
+  "module": "module/index.js",
+  "types": "lib/index.d.ts",
+  "author": "Ruggery Iury Corrêa <ruggeryiury@gmail.com>",
+  "license": "MIT",
+  "keywords": [
+    "fs",
+    "fs-library",
+    "javascript",
+    "javascript-library",
+    "node",
+    "nodejs",
+    "nodejs-modules",
+    "path",
+    "typescript",
+    "typescript-library"
+  ],
+  "scripts": {
+    "build": "bun build:commonjs && bun build:esmodules",
+    "build:package": "bun build:commonjs && bun build:esmodules && npm pack",
+    "build:commonjs": "tsc --project ./prod.tsconfig.json",
+    "build:esmodules": "tsc --project ./prod.tsconfig.json --module nodenext --moduleResolution nodenext --outDir module",
+    "clear": "rimraf lib module",
+    "dev": "tsx watch ./tests/exec.ts",
+    "format": "prettier --write .",
+    "lint": "eslint src",
+    "test": "vitest"
+  },
+  "exports": {
+    ".": {
+      "require": "./lib/index.js",
+      "import": "./module/index.js",
+      "default": "./module/index.js"
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.10",
+    "eslint": "^9.2.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsdoc": "^48.2.3",
+    "eslint-plugin-n": "^17.4.0",
+    "globals": "^15.1.0",
+    "prettier": "^3.2.5",
+    "tsx": "^4.9.3",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.8.0",
+    "vitest": "^1.6.0"
+  }
+}
