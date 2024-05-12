@@ -1,6 +1,6 @@
 import { resolve } from 'node:path'
 import { describe, expect, test } from 'vitest'
-import Path, { PathJSError } from '../src'
+import Path, { PathJSError } from '../src/index.js'
 
 const cwd = process.cwd()
 describe('PathJS Main Functions', () => {

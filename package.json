@@ -24,8 +24,8 @@
     "typescript-library"
   ],
   "scripts": {
-    "build": "bun build:commonjs && bun build:esmodules",
-    "build:package": "bun build:commonjs && bun build:esmodules && npm pack",
+    "build": "bun run build:commonjs && bun run build:esmodules",
+    "build:package": "bun run build:commonjs && bun run build:esmodules && npm pack",
     "build:commonjs": "tsc --project ./prod.tsconfig.json",
     "build:esmodules": "tsc --project ./prod.tsconfig.json --module nodenext --moduleResolution nodenext --outDir module",
     "clear": "rimraf lib module",
