@@ -1,5 +1,5 @@
 {
-  "name": "path-js",
+  "name": "@ruggeryiury/path-js",
   "version": "1.0.0",
   "private": true,
   "description": "A path utility suite that gathers several functions related to a specific path.",
