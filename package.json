@@ -1,7 +1,7 @@
 {
-  "name": "@ruggeryiury/path-js",
+  "name": "path-js",
   "version": "1.0.0",
-  "private": false,
+  "private": true,
   "description": "A path utility suite that gathers several functions related to a specific path.",
   "homepage": "https://github.com/ruggeryiury/path-js#readme",
   "repository": "github:ruggeryiury/path-js",
@@ -24,8 +24,8 @@
     "typescript-library"
   ],
   "scripts": {
-    "build": "bun run build:commonjs && bun run build:esmodules",
-    "build:package": "bun run build:commonjs && bun run build:esmodules && npm pack",
+    "build": "pnpm run build:commonjs && pnpm run build:esmodules",
+    "build:package": "pnpm run build:commonjs && pnpm run build:esmodules && npm pack",
     "build:commonjs": "tsc --project ./prod.tsconfig.json",
     "build:esmodules": "tsc --project ./prod.tsconfig.json --module nodenext --moduleResolution nodenext --outDir module",
     "clear": "rimraf lib module",
