@@ -1,7 +1,7 @@
 {
   "name": "@ruggeryiury/path-js",
   "version": "1.0.0",
-  "private": true,
+  "private": false,
   "description": "A path utility suite that gathers several functions related to a specific path.",
   "homepage": "https://github.com/ruggeryiury/path-js#readme",
   "repository": "github:ruggeryiury/path-js",
