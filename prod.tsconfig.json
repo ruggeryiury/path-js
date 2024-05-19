@@ -1,14 +1,12 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": ["DOM", "ES2015", "ES2021"],
+    "lib": ["ES2015", "ES2021"],
     "module": "CommonJS",
     "moduleResolution": "Node",
-    "allowJs": true,
     "declaration": true,
     "sourceMap": true,
     "outDir": "./lib",
-    "downlevelIteration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true
