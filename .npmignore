@@ -11,7 +11,7 @@ eslint.config.js
 prettier.config.js
 prod.tsconfig.json
 tsconfig.json
-yarn*
+pnpm-lock.yaml
 *.tgz
 *.txt
 *.env

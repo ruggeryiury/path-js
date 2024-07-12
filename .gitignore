@@ -1,5 +1,5 @@
 node_modules/
-/lib/
-/module/
-tests/exec.ts
+dist/
+tests/
+pnpm-lock.yaml
 *.tgz

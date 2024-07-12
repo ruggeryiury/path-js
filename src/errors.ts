@@ -1,6 +1,5 @@
 /**
  * Generic `PathJS` error.
- * - - - -
  */
 export class PathJSError extends Error {
   /**

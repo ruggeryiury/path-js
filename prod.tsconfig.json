@@ -1,16 +1,4 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "lib": ["ES2015", "ES2021"],
-    "module": "CommonJS",
-    "moduleResolution": "Node",
-    "declaration": true,
-    "sourceMap": true,
-    "outDir": "./lib",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true
-  },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules/"]
+  "extends": "./tsconfig.json",
+  "exclude": ["tests"]
 }

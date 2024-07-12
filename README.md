@@ -13,7 +13,9 @@
 
 - [About](#about)
 - [Usage](#usage)
-- [API](#api)
+- [Static methods](#static-methods)
+  - [`Path.pathResolve()`](#pathpathresolve)
+- [Non-static methods](#non-static-methods)
   - [`Path.exists()`](#pathexists)
   - [`Path.type()`](#pathtype)
   - [`Path.strictType()`](#pathstricttype)
@@ -59,7 +61,23 @@ const file = 'path/to/file.txt'
 const filePath = new Path(file)
 ```
 
-# API
+# Static methods
+
+## `Path.pathResolve()`
+
+A static path resolver method.
+
+- Parameters:
+  - **...paths** `string[]`: The paths to be resolved.
+- Returns: `string`
+
+```ts
+import Path from 'path-js'
+
+const resolvedPath = Path.pathResolve()
+```
+
+# Non-static methods
 
 ## `Path.exists()`
 
