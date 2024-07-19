@@ -1,16 +1,6 @@
 import { once } from 'node:events'
 import { WriteStream, createWriteStream, existsSync, lstatSync } from 'node:fs'
-import {
-  type FileHandle,
-  mkdir,
-  open,
-  readFile,
-  readdir,
-  rename,
-  rm,
-  unlink,
-  writeFile,
-} from 'node:fs/promises'
+import { type FileHandle, mkdir, open, readFile, readdir, rename, rm, unlink, writeFile } from 'node:fs/promises'
 import { basename, dirname, extname, isAbsolute, resolve } from 'node:path'
 import { Stream } from 'node:stream'
 import { PathJSError } from './errors.js'
@@ -53,19 +43,9 @@ export interface PathJSONRepresentation {
 
 export type BufferEncodingOrNull = BufferEncoding | null | undefined
 
-export type ReadFileReturnType<RT extends BufferEncodingOrNull> =
-  RT extends BufferEncoding
-    ? string
-    : RT extends null | undefined
-      ? Buffer
-      : string | Buffer
+export type ReadFileReturnType<RT extends BufferEncodingOrNull> = RT extends BufferEncoding ? string : RT extends null | undefined ? Buffer : string | Buffer
 
-export type FileWriteDataTypes =
-  | string
-  | NodeJS.ArrayBufferView
-  | Iterable<string | NodeJS.ArrayBufferView>
-  | AsyncIterable<string | NodeJS.ArrayBufferView>
-  | Stream
+export type FileWriteDataTypes = string | NodeJS.ArrayBufferView | Iterable<string | NodeJS.ArrayBufferView> | AsyncIterable<string | NodeJS.ArrayBufferView> | Stream
 
 export interface FileWriteStreamReturnObject {
   /**
@@ -131,7 +111,7 @@ export default class Path {
   }
 
   // #region Static Methods
-  
+
   /**
    * A static path resolver method.
    * - - - -
@@ -152,14 +132,8 @@ export default class Path {
    * @returns {boolean} Always returns `true`, meaning the file/directory exists.
    * @throws {PathJSError} When the path doesn't resolves to an existing file/directory.
    */
-  private checkExistence(
-    operator: string,
-    checkExistenceAs?: PathTypeValues
-  ): boolean {
-    if (!this.exists())
-      throw new PathJSError(
-        `Provided path "${this.path}" does not exist to perform Path.${operator}() operation. Please, provide a path that resolves to an actual ${checkExistenceAs ?? 'file or directory'}.`
-      )
+  private checkExistence(operator: string, checkExistenceAs?: PathTypeValues): boolean {
+    if (!this.exists()) throw new PathJSError(`Provided path "${this.path}" does not exist to perform Path.${operator}() operation. Please, provide a path that resolves to an actual ${checkExistenceAs ?? 'file or directory'}.`)
     return true
   }
 
@@ -171,10 +145,7 @@ export default class Path {
    * @throws {PathJSError} When the path doesn't resolves to an existing file.
    */
   private checkAsFile(operator: string): boolean {
-    if (!lstatSync(this.path).isFile())
-      throw new PathJSError(
-        `Provided path "${this.path} is not a file to perform file operation Path.${operator}()"`
-      )
+    if (!lstatSync(this.path).isFile()) throw new PathJSError(`Provided path "${this.path} is not a file to perform file operation Path.${operator}()"`)
     return true
   }
 
@@ -186,10 +157,7 @@ export default class Path {
    * @throws {PathJSError} When the path doesn't resolves to an existing directory.
    */
   private checkAsDirectory(operator: string): boolean {
-    if (!lstatSync(this.path).isDirectory())
-      throw new PathJSError(
-        `Provided path "${this.path} is not a directory to perform directory operation Path.${operator}()"`
-      )
+    if (!lstatSync(this.path).isDirectory()) throw new PathJSError(`Provided path "${this.path} is not a directory to perform directory operation Path.${operator}()"`)
     return true
   }
 
@@ -292,18 +260,9 @@ export default class Path {
    * @returns {string} The new changed path as string.
    * @throws {PathJSError} If the instantiated class path type is not a file.
    */
-  changeFileName(
-    newFileName: string | null,
-    newFileExt?: string
-  ): string {
-    if (this.isDirPath())
-      throw new PathJSError(
-        `The path "${this.path}" is not a file to execute Path.changeFileName() operation.`
-      )
-    return resolve(
-      this.root,
-      `${newFileName ?? this.name}.${newFileExt?.startsWith('.') ? newFileExt.slice(1) : newFileExt ?? this.ext.slice(1)}`
-    )
+  changeFileName(newFileName: string | null, newFileExt?: string): string {
+    if (this.isDirPath()) throw new PathJSError(`The path "${this.path}" is not a file to execute Path.changeFileName() operation.`)
+    return resolve(this.root, `${newFileName ?? this.name}.${newFileExt?.startsWith('.') ? newFileExt.slice(1) : newFileExt ?? this.ext.slice(1)}`)
   }
 
   /**
@@ -314,14 +273,8 @@ export default class Path {
    * @throws {PathJSError} If the instantiated class path type is not a file.
    */
   changeFileExt(newFileExt: string): string {
-    if (this.isDirPath())
-      throw new PathJSError(
-        `The path "${this.path}" is not a file to execute Path.changeFileName() operation.`
-      )
-    return resolve(
-      this.root,
-      `${this.name}.${newFileExt.startsWith('.') ? newFileExt.slice(1) : newFileExt}`
-    )
+    if (this.isDirPath()) throw new PathJSError(`The path "${this.path}" is not a file to execute Path.changeFileName() operation.`)
+    return resolve(this.root, `${this.name}.${newFileExt.startsWith('.') ? newFileExt.slice(1) : newFileExt}`)
   }
 
   /**
@@ -332,10 +285,7 @@ export default class Path {
    * @throws {PathJSError} If the instantiated class path type is not a directory.
    */
   changeDirName(newDirName: string): string {
-    if (this.isFilePath())
-      throw new PathJSError(
-        `The path "${this.path}" is not a directory to execute Path.changeDirName() operation.`
-      )
+    if (this.isFilePath()) throw new PathJSError(`The path "${this.path}" is not a directory to execute Path.changeDirName() operation.`)
     return resolve(this.root, newDirName)
   }
 
@@ -404,10 +354,7 @@ export default class Path {
    * @throws {PathJSError} If the instantiated class path type is not a file.
    */
   async checkThenDeleteFile(): Promise<void> {
-    if (this.isDirPath())
-      throw new PathJSError(
-        `The path "${this.path}" is not a file to execute Path.checkThenDeleteFile() operation.`
-      )
+    if (this.isDirPath()) throw new PathJSError(`The path "${this.path}" is not a file to execute Path.checkThenDeleteFile() operation.`)
     if (this.exists()) await this.deleteFile()
   }
 
@@ -419,9 +366,7 @@ export default class Path {
    * @returns {Promise<ReadFileReturnType<RT>>} The contents of the file.
    * @throws {PathJSError} If the class instance path doesn't resolve to an existing file.
    */
-  async readFile<RT extends BufferEncodingOrNull = undefined>(
-    encoding?: RT
-  ): Promise<ReadFileReturnType<RT>> {
+  async readFile<RT extends BufferEncodingOrNull = undefined>(encoding?: RT): Promise<ReadFileReturnType<RT>> {
     this.checkExistence('readFile', 'file')
     this.checkAsFile('readFile')
     return (await readFile(this.path, encoding)) as ReadFileReturnType<RT>
@@ -436,10 +381,7 @@ export default class Path {
    * @returns {Promise<string>} The path of the actual created file.
    * @throws {Error} If an error occurs on the file writing process.
    */
-  async writeFile(
-    data: FileWriteDataTypes,
-    encoding?: BufferEncodingOrNull
-  ): Promise<string> {
+  async writeFile(data: FileWriteDataTypes, encoding?: BufferEncodingOrNull): Promise<string> {
     if (this.exists()) await this.deleteFile()
     await writeFile(this.path, data, encoding)
     return this.path
@@ -460,13 +402,8 @@ export default class Path {
     this.checkExistence('renameFile', 'file')
     this.checkAsFile('renameFile')
     const newPathIsAbs = isAbsolute(newPath)
-    const nPath = new Path(
-      newPathIsAbs ? newPath : resolve(dirname(this.path), newPath)
-    )
-    if (nPath.exists())
-      throw new Error(
-        `Provided path ${newPathIsAbs ? `"${nPath.path}"` : `(resolved to "${nPath.path}")`} already exists. Please, choose another file name.`
-      )
+    const nPath = new Path(newPathIsAbs ? newPath : resolve(dirname(this.path), newPath))
+    if (nPath.exists()) throw new Error(`Provided path ${newPathIsAbs ? `"${nPath.path}"` : `(resolved to "${nPath.path}")`} already exists. Please, choose another file name.`)
     await rename(this.path, nPath.path)
     return nPath.path
   }
@@ -503,10 +440,7 @@ export default class Path {
    * with the provided length.
    * @throws {PathJSError} If the class instance path doesn't resolve to an existing file.
    */
-  async readFileOffset(
-    byteOffset: number,
-    byteLength?: number
-  ): Promise<Buffer> {
+  async readFileOffset(byteOffset: number, byteLength?: number): Promise<Buffer> {
     this.checkAsFile('readFileOffset')
 
     let buffer: Buffer
@@ -536,11 +470,7 @@ export default class Path {
    * @returns {Promise<Buffer>} A Buffer with the read bytes, from the provided offset and
    * with the provided length.
    */
-  async readFileOffsetFromHandler(
-    handler: FileHandle,
-    byteOffset: number,
-    byteLength?: number
-  ): Promise<Buffer> {
+  async readFileOffsetFromHandler(handler: FileHandle, byteOffset: number, byteLength?: number): Promise<Buffer> {
     if (byteLength !== undefined) {
       const buffer = Buffer.alloc(byteLength)
       await handler.read(buffer, 0, byteLength, byteOffset)
@@ -564,16 +494,11 @@ export default class Path {
    * @returns {Promise<string>} The path of the new file as string.
    * @throws {PathJSError} If the provided file already exists.
    */
-  async createFileOnDir(
-    filename: string,
-    data?: FileWriteDataTypes | null,
-    encoding?: BufferEncodingOrNull
-  ): Promise<string> {
+  async createFileOnDir(filename: string, data?: FileWriteDataTypes | null, encoding?: BufferEncodingOrNull): Promise<string> {
     this.checkExistence('touch', 'directory')
     this.checkAsDirectory('touch')
     const newFilePath = resolve(this.path, filename)
-    if (existsSync(newFilePath))
-      throw new PathJSError(`File on path "${newFilePath}" already exists.`)
+    if (existsSync(newFilePath)) throw new PathJSError(`File on path "${newFilePath}" already exists.`)
     await writeFile(newFilePath, data ?? '', encoding)
     return newFilePath
   }
@@ -591,8 +516,7 @@ export default class Path {
   async readDir(asAbsolutePaths?: boolean): Promise<string[]> {
     this.checkExistence('readDir', 'directory')
     this.checkAsDirectory('readDir')
-    if (asAbsolutePaths)
-      return (await readdir(this.path)).map((path) => resolve(this.path, path))
+    if (asAbsolutePaths) return (await readdir(this.path)).map((path) => resolve(this.path, path))
     else return await readdir(this.path)
   }
 
@@ -606,8 +530,7 @@ export default class Path {
    * @throws {PathJSError} If the class instance path resolves to an existing directory.
    */
   async mkDir(recursive = false): Promise<string> {
-    if (this.exists())
-      throw new PathJSError(`Directory on path "${this.path}" already exists.`)
+    if (this.exists()) throw new PathJSError(`Directory on path "${this.path}" already exists.`)
     await mkdir(this.path, { recursive })
     return this.path
   }
