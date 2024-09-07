@@ -26,12 +26,7 @@ const tseslintConfig = {
     jsdoc: jsdoc,
     n: n,
   },
-  extends: [
-    eslint.configs.recommended,
-    ...tseslint.configs.strictTypeChecked,
-    ...tseslint.configs.stylisticTypeChecked,
-    jsdoc.configs['flat/recommended'],
-  ],
+  extends: [eslint.configs.recommended, ...tseslint.configs.strictTypeChecked, ...tseslint.configs.stylisticTypeChecked, jsdoc.configs['flat/recommended']],
   rules: {
     'jsdoc/no-undefined-types': 'off',
     'jsdoc/valid-types': 'off',
@@ -51,5 +46,3 @@ const tseslintConfig = {
 }
 
 export default tseslint.config(tseslintConfig)
-
-// module.exports = tseslint.config(tseslintConfig)

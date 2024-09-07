@@ -122,6 +122,16 @@ export default class Path {
     return resolve(...paths)
   }
 
+  /**
+   * Check if a random string is a path that resolves to a file/directory.
+   * - - - -
+   * @param {string} str The string to want to evaluate.
+   * @returns {boolean} A boolean value that tells if the provided string is a path that resolves to a file/directory.
+   */
+  static isPath(str: string): boolean {
+    return existsSync(str)
+  }
+
   // #region Private Methods
 
   /**
