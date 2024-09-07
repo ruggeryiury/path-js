@@ -1,5 +1,5 @@
 import { once } from 'node:events'
-import { WriteStream, createWriteStream, existsSync, lstatSync } from 'node:fs'
+import { WriteStream, createWriteStream, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, unlinkSync, writeFileSync } from 'node:fs'
 import { type FileHandle, mkdir, open, readFile, readdir, rename, rm, unlink, writeFile } from 'node:fs/promises'
 import { basename, dirname, extname, isAbsolute, resolve } from 'node:path'
 import { Stream } from 'node:stream'
@@ -45,7 +45,8 @@ export type BufferEncodingOrNull = BufferEncoding | null | undefined
 
 export type ReadFileReturnType<RT extends BufferEncodingOrNull> = RT extends BufferEncoding ? string : RT extends null | undefined ? Buffer : string | Buffer
 
-export type FileWriteDataTypes = string | NodeJS.ArrayBufferView | Iterable<string | NodeJS.ArrayBufferView> | AsyncIterable<string | NodeJS.ArrayBufferView> | Stream
+export type FileAsyncWriteDataTypes = string | NodeJS.ArrayBufferView | Iterable<string | NodeJS.ArrayBufferView> | AsyncIterable<string | NodeJS.ArrayBufferView> | Stream
+export type FileSyncWriteDataTypes = string | NodeJS.ArrayBufferView
 
 export interface FileWriteStreamReturnObject {
   /**
@@ -356,6 +357,17 @@ export default class Path {
     this.checkAsFile('deleteFile')
     await unlink(this.path)
   }
+  /**
+   * #### File method:
+   * Synchronously deletes the file resolved on the class instance path.
+   * - - - -
+   * @throws {PathJSError} If the class instance path doesn't resolve to an existing file.
+   */
+  deleteFileSync(): void {
+    this.checkExistence('deleteFileSync', 'file')
+    this.checkAsFile('deleteFileSync')
+    unlinkSync(this.path)
+  }
 
   /**
    * #### File method:
@@ -366,6 +378,17 @@ export default class Path {
   async checkThenDeleteFile(): Promise<void> {
     if (this.isDirPath()) throw new PathJSError(`The path "${this.path}" is not a file to execute Path.checkThenDeleteFile() operation.`)
     if (this.exists()) await this.deleteFile()
+  }
+
+  /**
+   * #### File method:
+   * Synchronously checks if the file exists and delete it.
+   * - - - -
+   * @throws {PathJSError} If the instantiated class path type is not a file.
+   */
+  checkThenDeleteFileSync(): void {
+    if (this.isDirPath()) throw new PathJSError(`The path "${this.path}" is not a file to execute Path.checkThenDeleteFileSync() operation.`)
+    if (this.exists()) this.deleteFileSync()
   }
 
   /**
@@ -384,16 +407,45 @@ export default class Path {
 
   /**
    * #### File method:
+   * Synchronously reads a file contents.
+   * - - - -
+   * @param {RT} encoding `OPTIONAL` The encoding of the file. If `undefined`, it will be returned as a `Buffer`.
+   * @returns {ReadFileReturnType<RT>} The contents of the file.
+   * @throws {PathJSError} If the class instance path doesn't resolve to an existing file.
+   */
+  readFileSync<RT extends BufferEncodingOrNull = undefined>(encoding?: RT): ReadFileReturnType<RT> {
+    this.checkExistence('readFileSync', 'file')
+    this.checkAsFile('readFileSync')
+    return readFileSync(this.path, encoding) as ReadFileReturnType<RT>
+  }
+
+  /**
+   * #### File method:
    * Asynchronously creates a new file with provided data and returns the created file path.
    * - - - -
-   * @param {FileWriteDataTypes} data The content you want to write.
+   * @param {FileAsyncWriteDataTypes} data The content you want to write.
    * @param {BufferEncodingOrNull} encoding `OPTIONAL` The encoding of the content.
    * @returns {Promise<string>} The path of the actual created file.
    * @throws {Error} If an error occurs on the file writing process.
    */
-  async writeFile(data: FileWriteDataTypes, encoding?: BufferEncodingOrNull): Promise<string> {
+  async writeFile(data: FileAsyncWriteDataTypes, encoding?: BufferEncodingOrNull): Promise<string> {
     if (this.exists()) await this.deleteFile()
     await writeFile(this.path, data, encoding)
+    return this.path
+  }
+
+  /**
+   * #### File method:
+   * Synchronously creates a new file with provided data and returns the created file path.
+   * - - - -
+   * @param {FileSyncWriteDataTypes} data The content you want to write.
+   * @param {BufferEncodingOrNull} encoding `OPTIONAL` The encoding of the content.
+   * @returns {string} The path of the actual created file.
+   * @throws {Error} If an error occurs on the file writing process.
+   */
+  writeFileSync(data: FileSyncWriteDataTypes, encoding?: BufferEncodingOrNull): string {
+    if (this.exists()) this.deleteFileSync()
+    writeFileSync(this.path, data, encoding)
     return this.path
   }
 
@@ -415,6 +467,27 @@ export default class Path {
     const nPath = new Path(newPathIsAbs ? newPath : resolve(dirname(this.path), newPath))
     if (nPath.exists()) throw new Error(`Provided path ${newPathIsAbs ? `"${nPath.path}"` : `(resolved to "${nPath.path}")`} already exists. Please, choose another file name.`)
     await rename(this.path, nPath.path)
+    return nPath.path
+  }
+
+  /**
+   * #### File method:
+   * Sychronously rename/move a file based on a provided new path and returns the new path.
+   *
+   * Both absolute and relative paths are accepted. Relative paths will resolve
+   * from the class instantiated path root directory.
+   * - - - -
+   * @param {string} newPath The new location of the file.
+   * @returns {string} The new path of the renamed/moved file as string.
+   * @throws {PathJSError} If the provided new path location resolves to an already existing file.
+   */
+  renameFileSync(newPath: string): string {
+    this.checkExistence('renameFile', 'file')
+    this.checkAsFile('renameFile')
+    const newPathIsAbs = isAbsolute(newPath)
+    const nPath = new Path(newPathIsAbs ? newPath : resolve(dirname(this.path), newPath))
+    if (nPath.exists()) throw new Error(`Provided path ${newPathIsAbs ? `"${nPath.path}"` : `(resolved to "${nPath.path}")`} already exists. Please, choose another file name.`)
+    renameSync(this.path, nPath.path)
     return nPath.path
   }
 
@@ -499,17 +572,37 @@ export default class Path {
    * created file path.
    * - - - -
    * @param {string} filename The name of the new file to be created.
-   * @param {FileWriteDataTypes | null} data `OPTIONAL` The content of the new file to be created.
+   * @param {FileAsyncWriteDataTypes | null} data `OPTIONAL` The content of the new file to be created.
    * @param {BufferEncodingOrNull} encoding `OPTIONAL` The encoding of the content.
    * @returns {Promise<string>} The path of the new file as string.
    * @throws {PathJSError} If the provided file already exists.
    */
-  async createFileOnDir(filename: string, data?: FileWriteDataTypes | null, encoding?: BufferEncodingOrNull): Promise<string> {
+  async createFileOnDir(filename: string, data?: FileAsyncWriteDataTypes | null, encoding?: BufferEncodingOrNull): Promise<string> {
     this.checkExistence('touch', 'directory')
     this.checkAsDirectory('touch')
     const newFilePath = resolve(this.path, filename)
     if (existsSync(newFilePath)) throw new PathJSError(`File on path "${newFilePath}" already exists.`)
     await writeFile(newFilePath, data ?? '', encoding)
+    return newFilePath
+  }
+
+  /**
+   * #### Directory method:
+   * Synchronously creates a file inside the class instance directory path and returns the
+   * created file path.
+   * - - - -
+   * @param {string} filename The name of the new file to be created.
+   * @param {FileSyncWriteDataTypes | null} data `OPTIONAL` The content of the new file to be created.
+   * @param {BufferEncodingOrNull} encoding `OPTIONAL` The encoding of the content.
+   * @returns {string} The path of the new file as string.
+   * @throws {PathJSError} If the provided file already exists.
+   */
+  createFileOnDirSync(filename: string, data?: FileSyncWriteDataTypes | null, encoding?: BufferEncodingOrNull): string {
+    this.checkExistence('touch', 'directory')
+    this.checkAsDirectory('touch')
+    const newFilePath = resolve(this.path, filename)
+    if (existsSync(newFilePath)) throw new PathJSError(`File on path "${newFilePath}" already exists.`)
+    writeFileSync(newFilePath, data ?? '', encoding)
     return newFilePath
   }
 
@@ -532,6 +625,23 @@ export default class Path {
 
   /**
    * #### Directory method:
+   * Synchronously reads all directory files and returns their paths on an `Array`.
+   * - - - -
+   * @param {boolean} asAbsolutePaths `OPTIONAL` If `true`, the path of all files from the folder
+   * will be absolute paths rather than just the file/directory names. Default is `false`.
+   * @returns {string[]} An array with the name of all files and directories from
+   * the provided directory path.
+   * @throws {PathJSError} If the class instance path doesn't resolve to an existing directory.
+   */
+  readDirSync(asAbsolutePaths?: boolean): string[] {
+    this.checkExistence('readDir', 'directory')
+    this.checkAsDirectory('readDir')
+    if (asAbsolutePaths) return readdirSync(this.path).map((path) => resolve(this.path, path))
+    else return readdirSync(this.path)
+  }
+
+  /**
+   * #### Directory method:
    * Asynchronously creates a directory and returns the created directory path.
    * - - - -
    * @param {boolean | undefined} recursive `OPTIONAL` Indicates whether parent folders should be created.
@@ -547,6 +657,21 @@ export default class Path {
 
   /**
    * #### Directory method:
+   * Synchronously creates a directory and returns the created directory path.
+   * - - - -
+   * @param {boolean | undefined} recursive `OPTIONAL` Indicates whether parent folders should be created.
+   * If a folder was created, the path to the first created folder will be returned. Default is `false`.
+   * @returns {string} The created directory path.
+   * @throws {PathJSError} If the class instance path resolves to an existing directory.
+   */
+  mkDirSync(recursive = false): string {
+    if (this.exists()) throw new PathJSError(`Directory on path "${this.path}" already exists.`)
+    mkdirSync(this.path, { recursive })
+    return this.path
+  }
+
+  /**
+   * #### Directory method:
    * Asynchronously deletes a directory and all its contents.
    * - - - -
    * @param {boolean | undefined} recursive `OPTIONAL` If `true`, perform a recursive directory removal. In recursive mode, operations are retried on failure. Default is `true`.
@@ -556,6 +681,19 @@ export default class Path {
     this.checkExistence('rmDir', 'directory')
     this.checkAsDirectory('rmDir')
     await rm(this.path, { recursive })
+  }
+
+  /**
+   * #### Directory method:
+   * Synchronously deletes a directory and all its contents.
+   * - - - -
+   * @param {boolean | undefined} recursive `OPTIONAL` If `true`, perform a recursive directory removal. In recursive mode, operations are retried on failure. Default is `true`.
+   * @throws {PathJSError} If the class instance path doesn't resolve to an existing directory.
+   */
+  deleteDirSync(recursive = true): void {
+    this.checkExistence('rmDir', 'directory')
+    this.checkAsDirectory('rmDir')
+    rmSync(this.path, { recursive })
   }
 }
 
