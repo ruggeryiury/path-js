@@ -348,51 +348,6 @@ export default class Path {
 
   /**
    * #### File method:
-   * Asynchronously deletes the file resolved on the class instance path.
-   * - - - -
-   * @throws {PathJSError} If the class instance path doesn't resolve to an existing file.
-   */
-  async deleteFile(): Promise<void> {
-    this.checkExistence('deleteFile', 'file')
-    this.checkAsFile('deleteFile')
-    await unlink(this.path)
-  }
-  /**
-   * #### File method:
-   * Synchronously deletes the file resolved on the class instance path.
-   * - - - -
-   * @throws {PathJSError} If the class instance path doesn't resolve to an existing file.
-   */
-  deleteFileSync(): void {
-    this.checkExistence('deleteFileSync', 'file')
-    this.checkAsFile('deleteFileSync')
-    unlinkSync(this.path)
-  }
-
-  /**
-   * #### File method:
-   * Asynchronously checks if the file exists and delete it.
-   * - - - -
-   * @throws {PathJSError} If the instantiated class path type is not a file.
-   */
-  async checkThenDeleteFile(): Promise<void> {
-    if (this.isDirPath()) throw new PathJSError(`The path "${this.path}" is not a file to execute Path.checkThenDeleteFile() operation.`)
-    if (this.exists()) await this.deleteFile()
-  }
-
-  /**
-   * #### File method:
-   * Synchronously checks if the file exists and delete it.
-   * - - - -
-   * @throws {PathJSError} If the instantiated class path type is not a file.
-   */
-  checkThenDeleteFileSync(): void {
-    if (this.isDirPath()) throw new PathJSError(`The path "${this.path}" is not a file to execute Path.checkThenDeleteFileSync() operation.`)
-    if (this.exists()) this.deleteFileSync()
-  }
-
-  /**
-   * #### File method:
    * Asynchronously reads a file contents.
    * - - - -
    * @param {RT} encoding `OPTIONAL` The encoding of the file. If `undefined`, it will be returned as a `Buffer`.
@@ -447,6 +402,51 @@ export default class Path {
     if (this.exists()) this.deleteFileSync()
     writeFileSync(this.path, data, encoding)
     return this.path
+  }
+
+  /**
+   * #### File method:
+   * Asynchronously deletes the file resolved on the class instance path.
+   * - - - -
+   * @throws {PathJSError} If the class instance path doesn't resolve to an existing file.
+   */
+  async deleteFile(): Promise<void> {
+    this.checkExistence('deleteFile', 'file')
+    this.checkAsFile('deleteFile')
+    await unlink(this.path)
+  }
+  /**
+   * #### File method:
+   * Synchronously deletes the file resolved on the class instance path.
+   * - - - -
+   * @throws {PathJSError} If the class instance path doesn't resolve to an existing file.
+   */
+  deleteFileSync(): void {
+    this.checkExistence('deleteFileSync', 'file')
+    this.checkAsFile('deleteFileSync')
+    unlinkSync(this.path)
+  }
+
+  /**
+   * #### File method:
+   * Asynchronously checks if the file exists and delete it.
+   * - - - -
+   * @throws {PathJSError} If the instantiated class path type is not a file.
+   */
+  async checkThenDeleteFile(): Promise<void> {
+    if (this.isDirPath()) throw new PathJSError(`The path "${this.path}" is not a file to execute Path.checkThenDeleteFile() operation.`)
+    if (this.exists()) await this.deleteFile()
+  }
+
+  /**
+   * #### File method:
+   * Synchronously checks if the file exists and delete it.
+   * - - - -
+   * @throws {PathJSError} If the instantiated class path type is not a file.
+   */
+  checkThenDeleteFileSync(): void {
+    if (this.isDirPath()) throw new PathJSError(`The path "${this.path}" is not a file to execute Path.checkThenDeleteFileSync() operation.`)
+    if (this.exists()) this.deleteFileSync()
   }
 
   /**

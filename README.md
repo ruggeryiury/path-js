@@ -33,18 +33,18 @@
 - [File methods](#file-methods)
   - [`Path.openFile()`](#pathopenfile)
   - [`Path.readFile()`](#pathreadfile)
-  - [`Path.writeFile()`](#pathwritefile)
-  - [`Path.deleteFile()`](#pathdeletefile)
-  - [`Path.checkThenDeleteFile()`](#pathcheckthendeletefile)
-  - [`Path.renameFile()`](#pathrenamefile)
+  - [`Path.writeFile()` / `Path.writeFileSync()`](#pathwritefile--pathwritefilesync)
+  - [`Path.deleteFile()` / `Path.deleteFileSync()`](#pathdeletefile--pathdeletefilesync)
+  - [`Path.checkThenDeleteFile()` / `Path.checkThenDeleteFileSync`](#pathcheckthendeletefile--pathcheckthendeletefilesync)
+  - [`Path.renameFile()` / `Path.renameFileSync()`](#pathrenamefile--pathrenamefilesync)
   - [`Path.createFileWriteStream()`](#pathcreatefilewritestream)
   - [`Path.readFileOffset()`](#pathreadfileoffset)
   - [`Path.readFileOffsetFromHandler()`](#pathreadfileoffsetfromhandler)
 - [Directory methods](#directory-methods)
-  - [`Path.createFileOnDir()`](#pathcreatefileondir)
-  - [`Path.readDir()`](#pathreaddir)
-  - [`Path.mkDir()`](#pathmkdir)
-  - [`Path.deleteDir()`](#pathdeletedir)
+  - [`Path.createFileOnDir()` | `Path.createFileOnDirSync()`](#pathcreatefileondir--pathcreatefileondirsync)
+  - [`Path.readDir()` / `Path.readDirSync()`](#pathreaddir--pathreaddirsync)
+  - [`Path.mkDir()` / `Path.mkDirSync()`](#pathmkdir--pathmkdirsync)
+  - [`Path.deleteDir()` / `Path.deleteDirSync`](#pathdeletedir--pathdeletedirsync)
 
 # About
 
@@ -289,8 +289,7 @@ Returns a stringified JSON representation of this `Path` class instance.
 ```ts
 import Path from 'path-js'
 
-const file =
-  'C:\\Users\\Ruggery\\Documents\\Visual Studio Code\\js\\path-js\\package.json'
+const file = 'C:\\Users\\Ruggery\\Documents\\Visual Studio Code\\js\\path-js\\package.json'
 const filePath = new Path(file)
 const fileObjectToString = filePath.toString()
 
@@ -342,9 +341,9 @@ const filePath = new Path(file)
 const fileContentsAsBuffer = await filePath.readFile()
 ```
 
-## `Path.writeFile()`
+## `Path.writeFile()` / `Path.writeFileSync()`
 
-Asynchronously creates a new file with provided data and returns the created file path.
+Creates a new file with provided data and returns the created file path.
 
 - Parameters:
   - **data** `FileWriteDataTypes`: The content you want to write.
@@ -362,9 +361,9 @@ const fileNewContents = 'example text'
 await filePath.writeFile(fileNewContents, 'utf8')
 ```
 
-## `Path.deleteFile()`
+## `Path.deleteFile()` / `Path.deleteFileSync()`
 
-Asynchronously deletes the file resolved on the class instance path.
+Deletes the file resolved on the class instance path.
 
 - Throws: `PathJSError` if the class instance path doesn't resolve to an existing file.
 
@@ -376,9 +375,9 @@ const filePath = new Path(file)
 await filePath.unlinkFile()
 ```
 
-## `Path.checkThenDeleteFile()`
+## `Path.checkThenDeleteFile()` / `Path.checkThenDeleteFileSync`
 
-Asynchronously checks if the file exists and delete it.
+Checks if the file exists and delete it.
 
 - Throws: `PathJSError` if the instantiated class path type is not a file.
 
@@ -395,9 +394,9 @@ await filePath.checkThenDeleteFile()
 if (filePath.exists()) await filePath.deleteFile()
 ```
 
-## `Path.renameFile()`
+## `Path.renameFile()` / `Path.renameFileSync()`
 
-Asychronously rename/move a file based on a provided new path and returns the new path.
+Rename/move a file based on a provided new path and returns the new path.
 
 Both absolute and relative paths are accepted. Relative paths will resolve from the class instantiated path root directory.
 
@@ -507,9 +506,9 @@ fileHandler.close()
 
 These methods are meant to manipulate directories or contents inside of them.
 
-## `Path.createFileOnDir()`
+## `Path.createFileOnDir()` | `Path.createFileOnDirSync()`
 
-Asynchronously creates a file inside the class instance directory path and returns the created file path.
+Creates a file inside the class instance directory path and returns the created file path.
 
 - Parameters:
   - **filename** `string`: The name of the new file to be created.
@@ -528,9 +527,9 @@ const newFilePath = await dir.touch('newfile.txt', 'Hello, World')
 console.log(newFilePath) // 'path/to/a/directory/newfile.txt'
 ```
 
-## `Path.readDir()`
+## `Path.readDir()` / `Path.readDirSync()`
 
-Asynchronously reads all directory files and returns their paths on an `Array`.
+Reads all directory files and returns their paths on an `Array`.
 
 - Parameters:
   - **asAbsolutePaths**_?_ `boolean`: `OPTIONAL` If `true`, the path of all files from the folder will be absolute paths rather than just the file/directory names. Default is `false`.
@@ -550,9 +549,9 @@ const dirContents = await dirPath.readDir()
 console.log(dirContents) // ['test.txt', 'other.txt']
 ```
 
-## `Path.mkDir()`
+## `Path.mkDir()` / `Path.mkDirSync()`
 
-Asynchronously creates a directory and returns the created directory path.
+Creates a directory and returns the created directory path.
 
 - Parameters:
   - **recursive**_?_ `boolean`: `OPTIONAL` Indicates whether parent folders should be created. If a folder was created, the path to the first created folder will be returned. Default is `false`.
@@ -572,9 +571,9 @@ console.log(dirPathAgain) // 'path/to/a/directory'
 console.log(dirPath.path === dirPathAgain) // true
 ```
 
-## `Path.deleteDir()`
+## `Path.deleteDir()` / `Path.deleteDirSync`
 
-Asynchronously deletes a directory and all its contents.
+Deletes a directory and all its contents.
 
 - Parameters:
   - **recursive**_?_ `boolean`: `OPTIONAL` If `true`, perform a recursive directory removal. In recursive mode, operations are retried on failure. Default is `true`.
