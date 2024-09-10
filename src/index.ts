@@ -97,14 +97,12 @@ export default class Path {
    * Relative paths are accepted and they'll be resolved from
    * the current working directory (using `process.cwd()`).
    * - - - -
-   * @param {string} path The path to be evaluated.
+   * @param {string[]} paths The paths to be evaluated.
    * @returns {Path} A new instantiated `Path` class.
    * @see [PathJS GitHub Repository](https://github.com/ruggeryiury/path-js).
    */
-  constructor(path: string) {
-    if (isAbsolute(path)) this.path = resolve(path)
-    else this.path = resolve(process.cwd(), path)
-
+  constructor(...paths: string[]) {
+    this.path = resolve(...paths)
     this.root = dirname(this.path)
     this.fullname = basename(this.path)
     this.name = basename(this.path, extname(this.path))
@@ -124,13 +122,13 @@ export default class Path {
   }
 
   /**
-   * Check if a random string is a path that resolves to a file/directory.
+   * Checks if a random string is a path that resolves to a file/directory.
    * - - - -
-   * @param {string} str The string to want to evaluate.
+   * @param {string[]} paths The paths to want to evaluate.
    * @returns {boolean} A boolean value that tells if the provided string is a path that resolves to a file/directory.
    */
-  static isPath(str: string): boolean {
-    return existsSync(str)
+  static isPath(...paths: string[]): boolean {
+    return existsSync(resolve(...paths))
   }
 
   // #region Private Methods

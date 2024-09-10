@@ -12,9 +12,10 @@
 </div>
 
 - [About](#about)
-- [Usage](#usage)
+- [`Path()`](#path)
 - [Static methods](#static-methods)
-  - [`Path.pathResolve()`](#pathpathresolve)
+  - [`Path.resolve()`](#pathresolve)
+  - [`Path.isPath()`](#pathispath)
 - [Non-static methods](#non-static-methods)
   - [`Path.exists()`](#pathexists)
   - [`Path.type()`](#pathtype)
@@ -23,7 +24,7 @@
   - [`Path.isFilePath()`](#pathisfilepath)
   - [`Path.isDirPath()`](#pathisdirpath)
 - [Path editors](#path-editors)
-  - [`Path.resolve()`](#pathresolve)
+  - [`Path.resolve()`](#pathresolve-1)
   - [`Path.changeFileName()`](#pathchangefilename)
   - [`Path.changeFileExt()`](#pathchangefileext)
   - [`Path.changeDirName()`](#pathchangedirname)
@@ -50,9 +51,9 @@
 
 **_Path-JS_** joins several methods from Node's `fs` and `path` modules in a single class. These methods will work on a path specified on the class constructor, joining methods to manipulate both files and directories.
 
-# Usage
+# `Path()`
 
-Just call the `Path` class, providing a path and you're ready to go!
+Just call the `Path` class, providing a path (or multiple paths) and you're ready to go!
 
 ```ts
 import Path from 'path-js'
@@ -63,7 +64,7 @@ const filePath = new Path(file)
 
 # Static methods
 
-## `Path.pathResolve()`
+## `Path.resolve()`
 
 A static path resolver method.
 
@@ -74,7 +75,23 @@ A static path resolver method.
 ```ts
 import Path from 'path-js'
 
-const resolvedPath = Path.pathResolve()
+const file = 'path/to/file.txt'
+const resolvedPath = Path.resolve(file)
+```
+
+## `Path.isPath()`
+
+Checks if a random string is a path that resolves to a file/directory.
+
+- Parameters:
+  - **...paths** `string[]`: The paths to be resolved.
+- Returns: `boolean`
+
+```ts
+import Path from 'path-js'
+
+const file = 'path/to/file.txt'
+const isPath = Path.isPath(file)
 ```
 
 # Non-static methods
@@ -298,7 +315,7 @@ console.log(fileObjectToString) // {"path":"C:\\Users\\Ruggery\\Documents\\Visua
 
 # File methods
 
-These methods are meant to manipulate files.
+These methods are meant to manipulate files. Some of them has synchronous and asynchonous versions of the same method.
 
 ## `Path.openFile()`
 
@@ -504,7 +521,7 @@ fileHandler.close()
 
 # Directory methods
 
-These methods are meant to manipulate directories or contents inside of them.
+These methods are meant to manipulate directories or contents inside of them. Some of them has synchronous and asynchonous versions of the same method.
 
 ## `Path.createFileOnDir()` | `Path.createFileOnDirSync()`
 
