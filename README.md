@@ -14,38 +14,40 @@
 - [About](#about)
 - [`Path()`](#path)
 - [Static methods](#static-methods)
-  - [`Path.resolve()`](#pathresolve)
-  - [`Path.isPath()`](#pathispath)
+  - [`resolve()`](#resolve)
+  - [`isPath()`](#ispath)
+  - [`stringToPath()`](#stringtopath)
 - [Non-static methods](#non-static-methods)
-  - [`Path.exists()`](#pathexists)
-  - [`Path.type()`](#pathtype)
-  - [`Path.strictType()`](#pathstricttype)
+  - [`exists()`](#exists)
+  - [`type()`](#type)
+  - [`strictType()`](#stricttype)
 - [Path Type Checkers](#path-type-checkers)
-  - [`Path.isFilePath()`](#pathisfilepath)
-  - [`Path.isDirPath()`](#pathisdirpath)
+  - [`isFilePath()`](#isfilepath)
+  - [`isDirPath()`](#isdirpath)
 - [Path editors](#path-editors)
-  - [`Path.resolve()`](#pathresolve-1)
-  - [`Path.changeFileName()`](#pathchangefilename)
-  - [`Path.changeFileExt()`](#pathchangefileext)
-  - [`Path.changeDirName()`](#pathchangedirname)
+  - [`resolve()`](#resolve-1)
+  - [`changeFileName()`](#changefilename)
+  - [`changeFileExt()`](#changefileext)
+  - [`changeDirName()`](#changedirname)
 - [Class converters](#class-converters)
-  - [`Path.toJSON()`](#pathtojson)
-  - [`Path.toString()`](#pathtostring)
+  - [`toJSON()`](#tojson)
+  - [`toString()`](#tostring)
 - [File methods](#file-methods)
-  - [`Path.openFile()`](#pathopenfile)
-  - [`Path.readFile()`](#pathreadfile)
-  - [`Path.writeFile()` / `Path.writeFileSync()`](#pathwritefile--pathwritefilesync)
-  - [`Path.deleteFile()` / `Path.deleteFileSync()`](#pathdeletefile--pathdeletefilesync)
-  - [`Path.checkThenDeleteFile()` / `Path.checkThenDeleteFileSync`](#pathcheckthendeletefile--pathcheckthendeletefilesync)
-  - [`Path.renameFile()` / `Path.renameFileSync()`](#pathrenamefile--pathrenamefilesync)
-  - [`Path.createFileWriteStream()`](#pathcreatefilewritestream)
-  - [`Path.readFileOffset()`](#pathreadfileoffset)
-  - [`Path.readFileOffsetFromHandler()`](#pathreadfileoffsetfromhandler)
+  - [`openFile()`](#openfile)
+  - [`readFile()`](#readfile)
+  - [`writeFile()` / `writeFileSync()`](#writefile--writefilesync)
+  - [`deleteFile()` / `deleteFileSync()`](#deletefile--deletefilesync)
+  - [`checkThenDeleteFile()` / `checkThenDeleteFileSync()`](#checkthendeletefile--checkthendeletefilesync)
+  - [`renameFile()` / `renameFileSync()`](#renamefile--renamefilesync)
+  - [`copyFile()` / `copyFileSync()`](#copyfile--copyfilesync)
+  - [`createFileWriteStream()`](#createfilewritestream)
+  - [`readFileOffset()`](#readfileoffset)
+  - [`readFileOffsetFromHandler()`](#readfileoffsetfromhandler)
 - [Directory methods](#directory-methods)
-  - [`Path.createFileOnDir()` | `Path.createFileOnDirSync()`](#pathcreatefileondir--pathcreatefileondirsync)
-  - [`Path.readDir()` / `Path.readDirSync()`](#pathreaddir--pathreaddirsync)
-  - [`Path.mkDir()` / `Path.mkDirSync()`](#pathmkdir--pathmkdirsync)
-  - [`Path.deleteDir()` / `Path.deleteDirSync`](#pathdeletedir--pathdeletedirsync)
+  - [`createFileOnDir()` | `createFileOnDirSync()`](#createfileondir--createfileondirsync)
+  - [`readDir()` / `readDirSync()`](#readdir--readdirsync)
+  - [`mkDir()` / `mkDirSync()`](#mkdir--mkdirsync)
+  - [`deleteDir()` / `deleteDirSync`](#deletedir--deletedirsync)
 
 # About
 
@@ -64,7 +66,7 @@ const filePath = new Path(file)
 
 # Static methods
 
-## `Path.resolve()`
+## `resolve()`
 
 A static path resolver method.
 
@@ -79,7 +81,7 @@ const file = 'path/to/file.txt'
 const resolvedPath = Path.resolve(file)
 ```
 
-## `Path.isPath()`
+## `isPath()`
 
 Checks if a random string is a path that resolves to a file/directory.
 
@@ -94,9 +96,40 @@ const file = 'path/to/file.txt'
 const isPath = Path.isPath(file)
 ```
 
+## `stringToPath()`
+
+Utility function that evaluates path-like variables to an instantiated `Path` class.
+
+- Parameters:
+
+  - **path** `StringOrPath`: Any path as string or an instantiated `Path` class.
+
+- Returns: `Path` An instantiated `Path` class.
+
+```ts
+// You can create functions where it can accept both
+// string and instantiated Path classes using the StringOrPath type!
+const exampleFn = (srcPath: StringOrPath) => {
+  // You can pass string or instantiated Path classes that will return
+  // an instantiated Path class of the provided path.
+  const src = Path.stringToPath(srcPath)
+
+  // Now you can use Path-JS methods!
+  const srcFileExists = src.exists()
+
+  // ...
+}
+
+const anythingTXTString = 'path/to/anything.txt'
+const anythingTXTClass = new Path(anythingTXTString)
+
+exampleFn(anythingTXTString)
+exampleFn(anythingTXTClass)
+```
+
 # Non-static methods
 
-## `Path.exists()`
+## `exists()`
 
 Synchronously checks if the path resolves to an existing file/directory.
 
@@ -111,7 +144,7 @@ const fileExists = filePath.exists()
 console.log(typeof fileExists) // boolean
 ```
 
-## `Path.type()`
+## `type()`
 
 Synchronously checks the type (file or directory) of the path.
 
@@ -128,7 +161,7 @@ const fileType = filePath.type()
 console.log(fileType) // 'file'
 ```
 
-## `Path.strictType()`
+## `strictType()`
 
 A more strict version of the `Path.type()` method, throwing an `PathJSError` if the path doesn't resolve to a file directory.
 
@@ -152,7 +185,7 @@ const fileType = filePath.strictType() // Throws PathJSError
 
 _**Note**: These path type checkers uses the `Path.type()` method to evaluate the path types rather then using `Path.strictType()`, that throws a `PathJSError` if the file/directory doesn't exist._
 
-## `Path.isFilePath()`
+## `isFilePath()`
 
 Checks if the instantiated class path resolves to a file.
 
@@ -167,7 +200,7 @@ const isFilePath = filePath.isFilePath()
 console.log(isFilePath) // true
 ```
 
-## `Path.isDirPath()`
+## `isDirPath()`
 
 Checks if the instantiated class path resolves to a directory.
 
@@ -185,7 +218,7 @@ console.log(isDirPath) // true
 
 # Path editors
 
-## `Path.resolve()`
+## `resolve()`
 
 Returns a resolved path based on the instantiated class path and its type.
 
@@ -214,7 +247,7 @@ const newDirPath = filePath.resolve('../')
 console.log(newDirPath) // 'path/to'
 ```
 
-## `Path.changeFileName()`
+## `changeFileName()`
 
 Returns a new path with changed file name and extension.
 
@@ -234,7 +267,7 @@ const newFilePath = filePath.changeFileName('other-file', 'bin')
 console.log(newFilePath) // 'path/to/other-file.bin'
 ```
 
-## `Path.changeFileExt()`
+## `changeFileExt()`
 
 Returns a new path with changed file extension.
 
@@ -253,7 +286,7 @@ const newFilePath = filePath.changeFileExt('bin')
 console.log(newFilePath) // 'path/to/file.bin'
 ```
 
-## `Path.changeDirName()`
+## `changeDirName()`
 
 Returns a new path with changed directory name.
 
@@ -274,7 +307,7 @@ console.log(newDirPath) // 'path/to/bin'
 
 # Class converters
 
-## `Path.toJSON()`
+## `toJSON()`
 
 Calls all synchronous methods from this class and return all results on an object.
 
@@ -294,7 +327,7 @@ console.log(fileObject.fullname) // 'file.txt'
 console.log(fileObject.ext) // '.txt'
 ```
 
-## `Path.toString()`
+## `toString()`
 
 Returns a stringified JSON representation of this `Path` class instance.
 
@@ -317,7 +350,7 @@ console.log(fileObjectToString) // {"path":"C:\\Users\\Ruggery\\Documents\\Visua
 
 These methods are meant to manipulate files. Some of them has synchronous and asynchonous versions of the same method.
 
-## `Path.openFile()`
+## `openFile()`
 
 Asynchronously opens a file handler.
 
@@ -338,7 +371,7 @@ const fileHandler = await filePath.openFile()
 fileHandler.close()
 ```
 
-## `Path.readFile()`
+## `readFile()`
 
 Asynchronously reads a file contents.
 
@@ -358,7 +391,7 @@ const filePath = new Path(file)
 const fileContentsAsBuffer = await filePath.readFile()
 ```
 
-## `Path.writeFile()` / `Path.writeFileSync()`
+## `writeFile()` / `writeFileSync()`
 
 Creates a new file with provided data and returns the created file path.
 
@@ -378,7 +411,7 @@ const fileNewContents = 'example text'
 await filePath.writeFile(fileNewContents, 'utf8')
 ```
 
-## `Path.deleteFile()` / `Path.deleteFileSync()`
+## `deleteFile()` / `deleteFileSync()`
 
 Deletes the file resolved on the class instance path.
 
@@ -392,7 +425,7 @@ const filePath = new Path(file)
 await filePath.unlinkFile()
 ```
 
-## `Path.checkThenDeleteFile()` / `Path.checkThenDeleteFileSync`
+## `checkThenDeleteFile()` / `checkThenDeleteFileSync()`
 
 Checks if the file exists and delete it.
 
@@ -411,7 +444,7 @@ await filePath.checkThenDeleteFile()
 if (filePath.exists()) await filePath.deleteFile()
 ```
 
-## `Path.renameFile()` / `Path.renameFileSync()`
+## `renameFile()` / `renameFileSync()`
 
 Rename/move a file based on a provided new path and returns the new path.
 
@@ -434,7 +467,30 @@ await filePath.renameFile(newFilePath)
 console.log(oldFilePath.exists()) // false, since it was renamed/moved.
 ```
 
-## `Path.createFileWriteStream()`
+## `copyFile()` / `copyFileSync()`
+
+Copies a file to the provided new path and returns the new path.
+
+- Parameters:
+  - **destPath** `string`: The new location where you want to copy the file to.
+- Returns: `Promise<string>`: The path where the file was copied.
+- Throws: `PathJSError` if the provided new path location resolves to an already existing file.
+
+```ts
+import Path from 'path-js'
+
+const srcFile = 'path/to/file_to_be_copied.txt'
+const srcFilePath = new Path(file)
+
+const destFilePath = 'path/to/copied_file.txt'
+
+// Create a simple statement to delete the destination path file
+// and copies the source file to destination path.
+if (srcFilePath.exists()) await srcFilePath.checkThenDeleteFile()
+await srcFilePath.copyFile(destFilePath)
+```
+
+## `createFileWriteStream()`
 
 Asynchronously creates a file write stream and returns a `FileWriteStreamReturnObject` object, that contains two values: `stream` (The actual file write stream), and `once` (A promise that will be resolved when you close the file write stream).
 
@@ -459,7 +515,7 @@ stream.end()
 await once
 ```
 
-## `Path.readFileOffset()`
+## `readFileOffset()`
 
 Asynchronously opens the file resolved from the class instance path, reads only the bytes after the specified offset, closes it and returns the content as a `Buffer`.
 
@@ -482,7 +538,7 @@ const filePath = new Path(file)
 const fileHeader = await filePath.readFileOffset(0x0, 0x40)
 ```
 
-## `Path.readFileOffsetFromHandler()`
+## `readFileOffsetFromHandler()`
 
 Works as `Path.readFileOffset()`, but uses an already instantiated `FileHandle` object rather than create a new instance to automatically close it, saving resources.
 
@@ -523,7 +579,7 @@ fileHandler.close()
 
 These methods are meant to manipulate directories or contents inside of them. Some of them has synchronous and asynchonous versions of the same method.
 
-## `Path.createFileOnDir()` | `Path.createFileOnDirSync()`
+## `createFileOnDir()` | `createFileOnDirSync()`
 
 Creates a file inside the class instance directory path and returns the created file path.
 
@@ -544,7 +600,7 @@ const newFilePath = await dir.touch('newfile.txt', 'Hello, World')
 console.log(newFilePath) // 'path/to/a/directory/newfile.txt'
 ```
 
-## `Path.readDir()` / `Path.readDirSync()`
+## `readDir()` / `readDirSync()`
 
 Reads all directory files and returns their paths on an `Array`.
 
@@ -566,7 +622,7 @@ const dirContents = await dirPath.readDir()
 console.log(dirContents) // ['test.txt', 'other.txt']
 ```
 
-## `Path.mkDir()` / `Path.mkDirSync()`
+## `mkDir()` / `mkDirSync()`
 
 Creates a directory and returns the created directory path.
 
@@ -588,7 +644,7 @@ console.log(dirPathAgain) // 'path/to/a/directory'
 console.log(dirPath.path === dirPathAgain) // true
 ```
 
-## `Path.deleteDir()` / `Path.deleteDirSync`
+## `deleteDir()` / `deleteDirSync`
 
 Deletes a directory and all its contents.
 

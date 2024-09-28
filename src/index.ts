@@ -1,6 +1,6 @@
 import { once } from 'node:events'
-import { WriteStream, createWriteStream, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, unlinkSync, writeFileSync } from 'node:fs'
-import { type FileHandle, mkdir, open, readFile, readdir, rename, rm, unlink, writeFile } from 'node:fs/promises'
+import { WriteStream, copyFileSync, createWriteStream, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, unlinkSync, writeFileSync } from 'node:fs'
+import { type FileHandle, copyFile, mkdir, open, readFile, readdir, rename, rm, unlink, writeFile } from 'node:fs/promises'
 import { basename, dirname, extname, isAbsolute, resolve } from 'node:path'
 import { Stream } from 'node:stream'
 import { PathJSError } from './errors.js'
@@ -47,6 +47,11 @@ export type ReadFileReturnType<RT extends BufferEncodingOrNull> = RT extends Buf
 
 export type FileAsyncWriteDataTypes = string | NodeJS.ArrayBufferView | Iterable<string | NodeJS.ArrayBufferView> | AsyncIterable<string | NodeJS.ArrayBufferView> | Stream
 export type FileSyncWriteDataTypes = string | NodeJS.ArrayBufferView
+
+/**
+ * Types that can be converted using `Path.stringToPath()` static method.
+ */
+export type StringOrPath = string | Path
 
 export interface FileWriteStreamReturnObject {
   /**
@@ -129,6 +134,16 @@ export default class Path {
    */
   static isPath(...paths: string[]): boolean {
     return existsSync(resolve(...paths))
+  }
+  /**
+   * Utility function that evaluates path-like variables to an instantiated `Path` class.
+   * - - - -
+   * @param {StringOrPath} path Any path as string or an instantiated `Path` class.
+   * @returns {Path} An instantiated `Path` class.
+   */
+  static stringToPath(path: StringOrPath): Path {
+    if (path instanceof Path) return path
+    else return new Path(path)
   }
 
   // #region Private Methods
@@ -463,7 +478,7 @@ export default class Path {
     this.checkAsFile('renameFile')
     const newPathIsAbs = isAbsolute(newPath)
     const nPath = new Path(newPathIsAbs ? newPath : resolve(dirname(this.path), newPath))
-    if (nPath.exists()) throw new Error(`Provided path ${newPathIsAbs ? `"${nPath.path}"` : `(resolved to "${nPath.path}")`} already exists. Please, choose another file name.`)
+    if (nPath.exists()) throw new PathJSError(`Provided path ${newPathIsAbs ? `"${nPath.path}"` : `(resolved to "${nPath.path}")`} already exists. Please, choose another file name.`)
     await rename(this.path, nPath.path)
     return nPath.path
   }
@@ -480,13 +495,49 @@ export default class Path {
    * @throws {PathJSError} If the provided new path location resolves to an already existing file.
    */
   renameFileSync(newPath: string): string {
-    this.checkExistence('renameFile', 'file')
-    this.checkAsFile('renameFile')
+    this.checkExistence('renameFileSync', 'file')
+    this.checkAsFile('renameFileSync')
     const newPathIsAbs = isAbsolute(newPath)
     const nPath = new Path(newPathIsAbs ? newPath : resolve(dirname(this.path), newPath))
-    if (nPath.exists()) throw new Error(`Provided path ${newPathIsAbs ? `"${nPath.path}"` : `(resolved to "${nPath.path}")`} already exists. Please, choose another file name.`)
+    if (nPath.exists()) throw new PathJSError(`Provided path ${newPathIsAbs ? `"${nPath.path}"` : `(resolved to "${nPath.path}")`} already exists. Please, choose another file name.`)
     renameSync(this.path, nPath.path)
     return nPath.path
+  }
+
+  /**
+   * #### File method:
+   * Asychronously copies a file to the provided new path and returns the new path.
+   * - - - -
+   * @param {string} destPath The new location where you want to copy the file to.
+   * @returns {Promise<string>} The path where the file was copied.
+   * @throws {PathJSError} If the provided new path location resolves to an already existing file.
+   */
+  async copyFile(destPath: string): Promise<string> {
+    this.checkExistence('copyFile', 'file')
+    this.checkAsFile('copyFile')
+    const destPathIsAbs = isAbsolute(destPath)
+    const dPath = new Path(destPathIsAbs ? destPath : resolve(dirname(this.path), destPath))
+    if (dPath.exists()) throw new PathJSError(`Provided path ${destPathIsAbs ? `"${dPath.path}"` : `(resolved to "${dPath.path}")`} already exists. Please, choose another file name.`)
+    await copyFile(this.path, dPath.path)
+    return dPath.path
+  }
+
+  /**
+   * #### File method:
+   * Sychronously copies a file to the provided new path and returns the new path.
+   * - - - -
+   * @param {string} destPath The new location where you want to copy the file to.
+   * @returns {Promise<string>} The path where the file was copied.
+   * @throws {PathJSError} If the provided new path location resolves to an already existing file.
+   */
+  copyFileSync(destPath: string): string {
+    this.checkExistence('copyFile', 'file')
+    this.checkAsFile('copyFile')
+    const destPathIsAbs = isAbsolute(destPath)
+    const dPath = new Path(destPathIsAbs ? destPath : resolve(dirname(this.path), destPath))
+    if (dPath.exists()) throw new PathJSError(`Provided path ${destPathIsAbs ? `"${dPath.path}"` : `(resolved to "${dPath.path}")`} already exists. Please, choose another file name.`)
+    copyFileSync(this.path, dPath.path)
+    return dPath.path
   }
 
   /**
