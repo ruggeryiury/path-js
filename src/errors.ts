@@ -11,5 +11,7 @@ export class PathJSError extends Error {
   constructor(message = 'An unknown error occured') {
     super(message)
     this.name = 'PathJSError'
+    Error.captureStackTrace(this, PathJSError)
+    Object.setPrototypeOf(this, PathJSError.prototype)
   }
 }

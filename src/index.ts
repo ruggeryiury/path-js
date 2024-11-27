@@ -389,6 +389,44 @@ export default class Path {
 
   /**
    * #### File method:
+   * Asynchronously reads a JSON file and automatically parses the JSON file to JavaScript Object.
+   * - - - -
+   * @param {BufferEncoding | undefined} encoding `OPTIONAL` The encoding of the file. Default is `'utf-8'`.
+   * @returns {Promise<T>} The parsed JSON file as JavaScript object.
+   * @throws {PathJSError} If the class instance path doesn't resolve to an existing file.
+   * @throws {PathJSError} If there's any known error on the parsing process.
+   */
+  async readJSONFile<T>(encoding: BufferEncoding = 'utf-8'): Promise<T> {
+    const contents = await readFile(this.path, encoding)
+    try {
+      return JSON.parse(Buffer.isBuffer(contents) ? contents.toString(encoding) : contents) as T
+    } catch (err) {
+      if (err instanceof Error) throw new PathJSError(err.message)
+      else throw err
+    }
+  }
+
+  /**
+   * #### File method:
+   * Synchronously reads a JSON file and automatically parses the JSON file to JavaScript Object.
+   * - - - -
+   * @param {BufferEncoding | undefined} encoding `OPTIONAL` The encoding of the file. Default is `'utf-8'`.
+   * @returns {Promise<T>} The parsed JSON file as JavaScript object.
+   * @throws {PathJSError} If the class instance path doesn't resolve to an existing file.
+   * @throws {PathJSError} If there's any known error on the parsing process.
+   */
+  readJSONFileSync<T>(encoding: BufferEncoding = 'utf-8'): T {
+    const contents = readFileSync(this.path, encoding)
+    try {
+      return JSON.parse(Buffer.isBuffer(contents) ? contents.toString(encoding) : contents) as T
+    } catch (err) {
+      if (err instanceof Error) throw new PathJSError(err.message)
+      else throw err
+    }
+  }
+
+  /**
+   * #### File method:
    * Asynchronously creates a new file with provided data and returns the created file path.
    * - - - -
    * @param {FileAsyncWriteDataTypes} data The content you want to write.

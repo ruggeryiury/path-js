@@ -34,7 +34,8 @@
   - [`toString()`](#tostring)
 - [File methods](#file-methods)
   - [`openFile()`](#openfile)
-  - [`readFile()`](#readfile)
+  - [`readFile()` / `readFileSync()`](#readfile--readfilesync)
+  - [`readJSONFile()` / `readJSONFileSync()`](#readjsonfile--readjsonfilesync)
   - [`writeFile()` / `writeFileSync()`](#writefile--writefilesync)
   - [`deleteFile()` / `deleteFileSync()`](#deletefile--deletefilesync)
   - [`checkThenDeleteFile()` / `checkThenDeleteFileSync()`](#checkthendeletefile--checkthendeletefilesync)
@@ -371,9 +372,9 @@ const fileHandler = await filePath.openFile()
 fileHandler.close()
 ```
 
-## `readFile()`
+## `readFile()` / `readFileSync()`
 
-Asynchronously reads a file contents.
+Reads a file contents.
 
 - Parameters:
   - **encoding**_?_ `BufferEncodingOrNull`: `OPTIONAL` The encoding of the file. If `undefined`, it will be returned as a `Buffer`.
@@ -389,6 +390,33 @@ const file = 'path/to/file.txt'
 const filePath = new Path(file)
 
 const fileContentsAsBuffer = await filePath.readFile()
+```
+
+## `readJSONFile()` / `readJSONFileSync()`
+
+Reads a JSON file and automatically parses the JSON file to JavaScript Object.
+
+- Parameters:
+  - **encoding**_?_ `BufferEncoding`: `OPTIONAL` The encoding of the file. Default is `'utf-8'`.
+- Returns:
+  - `T`: The parsed JSON file as JavaScript object.
+- Throws:
+  - `PathJSError` if the class instance path doesn't resolve to a file.
+  - `PathJSError` if there's any known error on the parsing process.
+  - `Error` if there's any unknown error on the parsing process.
+
+```ts
+import Path from 'path-js'
+
+type ParsedJSON = {
+  key1: string
+}
+
+const file = 'path/to/json_file.json'
+const filePath = new Path(file)
+
+const parsedJSON = await filePath.readJSONFile<ParsedJSON>()
+console.log(parsedJSON.key1)
 ```
 
 ## `writeFile()` / `writeFileSync()`
