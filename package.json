@@ -2,7 +2,7 @@
   "name": "path-js",
   "version": "1.5.0",
   "private": true,
-  "description": "A path utility suite that gathers several functions related to a specific path",
+  "description": "An utility suite that gathers several functions related to a specific file or directory path.",
   "homepage": "https://github.com/ruggeryiury/path-js#readme",
   "repository": "github:ruggeryiury/path-js",
   "type": "module",

@@ -72,7 +72,7 @@ const filePath = new Path(file)
 A static path resolver method.
 
 - Parameters:
-  - **...paths** `string[]`: The paths to be resolved.
+  - **...paths** `string[]` — The paths to be resolved.
 - Returns: `string`
 
 ```ts
@@ -87,7 +87,7 @@ const resolvedPath = Path.resolve(file)
 Checks if a random string is a path that resolves to a file/directory.
 
 - Parameters:
-  - **...paths** `string[]`: The paths to be resolved.
+  - **...paths** `string[]` — The paths to be resolved.
 - Returns: `boolean`
 
 ```ts
@@ -103,7 +103,7 @@ Utility function that evaluates path-like variables to an instantiated `Path` cl
 
 - Parameters:
 
-  - **path** `StringOrPath`: Any path as string or an instantiated `Path` class.
+  - **path** `StringOrPath` — Any path as string or an instantiated `Path` class.
 
 - Returns: `Path` An instantiated `Path` class.
 
@@ -229,7 +229,7 @@ The path can be both absolute or a relative path. Relative paths behave differen
 - If the instantiated class path resolves to a `directory`, the provided relative path will be resolved **from this directory itself**.
 
 - Parameters:
-  - **newPath** `string`: The new path to be resolved
+  - **newPath** `string` — The new path to be resolved
 - Returns: `string`
 
 ```ts
@@ -253,8 +253,8 @@ console.log(newDirPath) // 'path/to'
 Returns a new path with changed file name and extension.
 
 - Parameters:
-  - **newFileName** `string | null`: The new file name.
-  - **newFileExt**_?_ `string | undefined`: `OPTIONAL` The new file extension.
+  - **newFileName** `string | null` — The new file name.
+  - **newFileExt**_?_ `string | undefined` — `OPTIONAL` The new file extension.
 - Returns: `string`
 - Throws: `PathJSError` if the instantiated class path type is not a file.
 
@@ -273,7 +273,7 @@ console.log(newFilePath) // 'path/to/other-file.bin'
 Returns a new path with changed file extension.
 
 - Parameters:
-  - **newFileExt** `string`: The new file extension.
+  - **newFileExt** `string` — The new file extension.
 - Returns: `string`
 - Throws: `PathJSError` if the instantiated class path type is not a file.
 
@@ -292,7 +292,7 @@ console.log(newFilePath) // 'path/to/file.bin'
 Returns a new path with changed directory name.
 
 - Parameters:
-  - **newDirName** `string`: The new directory name.
+  - **newDirName** `string` — The new directory name.
 - Returns: `string`
 - Throws: `PathJSError` if the instantiated class path type is not a directory.
 
@@ -333,8 +333,8 @@ console.log(fileObject.ext) // '.txt'
 Returns a stringified JSON representation of this `Path` class instance.
 
 - Parameters:
-  - **replacer**_?_ `(string | number)[] | null`: `OPTIONAL` An array of strings and numbers that acts as an approved list for selecting the object properties that will be stringified.
-  - **space**_?_ `number`: `OPTIONAL` Adds indentation, white space, and line break characters to the return-value JSON text to make it easier to read.
+  - **replacer**_?_ `(string | number)[] | null` — `OPTIONAL` An array of strings and numbers that acts as an approved list for selecting the object properties that will be stringified.
+  - **space**_?_ `number` — `OPTIONAL` Adds indentation, white space, and line break characters to the return-value JSON text to make it easier to read.
 - Returns: `string`
 
 ```ts
@@ -356,7 +356,7 @@ These methods are meant to manipulate files. Some of them has synchronous and as
 Asynchronously opens a file handler.
 
 - Parameters:
-  - **flags**_?_ `string | number`: `OPTIONAL` The file system flag. See the supported flags [here](https://nodejs.org/api/fs.html#file-system-flags). Default is `'r'` (Read).
+  - **flags**_?_ `string | number` — `OPTIONAL` The file system flag. See the supported flags [here](https://nodejs.org/api/fs.html#file-system-flags). Default is `'r'` (Read).
 - Returns: `FileHandle`
 - Throws: `PathJSError` if the class instance path doesn't resolve to a file.
 
@@ -377,10 +377,10 @@ fileHandler.close()
 Reads a file contents.
 
 - Parameters:
-  - **encoding**_?_ `BufferEncodingOrNull`: `OPTIONAL` The encoding of the file. If `undefined`, it will be returned as a `Buffer`.
+  - **encoding**_?_ `BufferEncodingOrNull` — `OPTIONAL` The encoding of the file. If `undefined`, it will be returned as a `Buffer`.
 - Returns:
-  - `string`: If you specify an `encoding` argument.
-  - `Buffer`: If you don't specify an `encoding` argument.
+  - `string` — If you specify an `encoding` argument.
+  - `Buffer` — If you don't specify an `encoding` argument.
 - Throws: `PathJSError` if the class instance path doesn't resolve to a file.
 
 ```ts
@@ -397,9 +397,9 @@ const fileContentsAsBuffer = await filePath.readFile()
 Reads a JSON file and automatically parses the JSON file to JavaScript Object.
 
 - Parameters:
-  - **encoding**_?_ `BufferEncoding`: `OPTIONAL` The encoding of the file. Default is `'utf-8'`.
+  - **encoding**_?_ `BufferEncoding` — `OPTIONAL` The encoding of the file. Default is `'utf-8'`.
 - Returns:
-  - `T`: The parsed JSON file as JavaScript object.
+  - `T` — The parsed JSON file as JavaScript object.
 - Throws:
   - `PathJSError` if the class instance path doesn't resolve to a file.
   - `PathJSError` if there's any known error on the parsing process.
@@ -424,8 +424,8 @@ console.log(parsedJSON.key1)
 Creates a new file with provided data and returns the created file path.
 
 - Parameters:
-  - **data** `FileWriteDataTypes`: The content you want to write.
-  - **encoding**_?_ `BufferEncodingOrNull`: `OPTIONAL` The encoding of the content.
+  - **data** `FileWriteDataTypes` — The content you want to write.
+  - **encoding**_?_ `BufferEncodingOrNull` — `OPTIONAL` The encoding of the content.
 - Returns: `string`
 - Throws: `Error` if an error occurs on the file writing process.
 
@@ -479,8 +479,8 @@ Rename/move a file based on a provided new path and returns the new path.
 Both absolute and relative paths are accepted. Relative paths will resolve from the class instantiated path root directory.
 
 - Parameters:
-  - **newPath** `string`: The new location of the file.
-- Returns: `Promise<string>`: The new path of the renamed/moved file as string.
+  - **newPath** `string` — The new location of the file.
+- Returns: `Promise<string>` — The new path of the renamed/moved file as string.
 - Throws: `PathJSError` if the provided new path location resolves to an already existing file.
 
 ```ts
@@ -500,8 +500,8 @@ console.log(oldFilePath.exists()) // false, since it was renamed/moved.
 Copies a file to the provided new path and returns the new path.
 
 - Parameters:
-  - **destPath** `string`: The new location where you want to copy the file to.
-- Returns: `Promise<string>`: The path where the file was copied.
+  - **destPath** `string` — The new location where you want to copy the file to.
+- Returns: `Promise<string>` — The path where the file was copied.
 - Throws: `PathJSError` if the provided new path location resolves to an already existing file.
 
 ```ts
@@ -549,8 +549,8 @@ Asynchronously opens the file resolved from the class instance path, reads only 
 
 - Parameters:
 
-  - **byteOffset** `number`: The offset start where the file will be read.
-  - **byteLength**_?_ `number`: `OPTIONAL` The length of the bytes to want to be read. If `undefined`, it will read the entire file, starting from the provided offset.
+  - **byteOffset** `number` — The offset start where the file will be read.
+  - **byteLength**_?_ `number` — `OPTIONAL` The length of the bytes to want to be read. If `undefined`, it will read the entire file, starting from the provided offset.
 
 - Returns: `Buffer`
 - Throws: `PathJSError` if the class instance path doesn't resolve to an existing file.
@@ -573,9 +573,9 @@ Works as `Path.readFileOffset()`, but uses an already instantiated `FileHandle` 
 This method doesn't actually read the file resolved on the class instantiated path at all and it exists only to wrap this functional logic in a common place.
 
 - Parameters:
-  - **handler** `FileHandle`: An already instantiated `FileHandle` object from `fs.promises.open()` function.
-  - **byteOffset** `number`: The offset start where the file will be read.
-  - **byteLength**_?_ `number`: `OPTIONAL` The length of the bytes to want to be read. If `undefined`, it will read the entire file, starting from the provided offset.
+  - **handler** `FileHandle` — An already instantiated `FileHandle` object from `fs.promises.open()` function.
+  - **byteOffset** `number` — The offset start where the file will be read.
+  - **byteLength**_?_ `number` — `OPTIONAL` The length of the bytes to want to be read. If `undefined`, it will read the entire file, starting from the provided offset.
 - Returns: `Buffer`
 
 ```ts
@@ -612,11 +612,11 @@ These methods are meant to manipulate directories or contents inside of them. So
 Creates a file inside the class instance directory path and returns the created file path.
 
 - Parameters:
-  - **filename** `string`: The name of the new file to be created.
-  - **data**_?_ `FileWriteDataTypes | null`: `OPTIONAL` The content of the new file to be created.
-  - **encoding**_?_ `BufferEncodingOrNull`: `OPTIONAL` The encoding of the content.
+  - **filename** `string` — The name of the new file to be created.
+  - **data**_?_ `FileWriteDataTypes | null` — `OPTIONAL` The content of the new file to be created.
+  - **encoding**_?_ `BufferEncodingOrNull` — `OPTIONAL` The encoding of the content.
 - Returns: `string`
-- Throws: `PathJSError`: if the provided file already exists.
+- Throws: `PathJSError` — if the provided file already exists.
 
 ```ts
 import Path from 'path-js'
@@ -633,7 +633,7 @@ console.log(newFilePath) // 'path/to/a/directory/newfile.txt'
 Reads all directory files and returns their paths on an `Array`.
 
 - Parameters:
-  - **asAbsolutePaths**_?_ `boolean`: `OPTIONAL` If `true`, the path of all files from the folder will be absolute paths rather than just the file/directory names. Default is `false`.
+  - **asAbsolutePaths**_?_ `boolean` — `OPTIONAL` If `true`, the path of all files from the folder will be absolute paths rather than just the file/directory names. Default is `false`.
 - Returns: `string[]`
 - Throws: `PathJSError` if the class instance path doesn't resolve to an existing directory.
 
@@ -655,7 +655,7 @@ console.log(dirContents) // ['test.txt', 'other.txt']
 Creates a directory and returns the created directory path.
 
 - Parameters:
-  - **recursive**_?_ `boolean`: `OPTIONAL` Indicates whether parent folders should be created. If a folder was created, the path to the first created folder will be returned. Default is `false`.
+  - **recursive**_?_ `boolean` — `OPTIONAL` Indicates whether parent folders should be created. If a folder was created, the path to the first created folder will be returned. Default is `false`.
 - Returns: `string`
 - Throws: `PathJSError` if the class instance path resolves to an existing directory.
 
@@ -677,7 +677,7 @@ console.log(dirPath.path === dirPathAgain) // true
 Deletes a directory and all its contents.
 
 - Parameters:
-  - **recursive**_?_ `boolean`: `OPTIONAL` If `true`, perform a recursive directory removal. In recursive mode, operations are retried on failure. Default is `true`.
+  - **recursive**_?_ `boolean` — `OPTIONAL` If `true`, perform a recursive directory removal. In recursive mode, operations are retried on failure. Default is `true`.
 - Throws: `PathJSError` if the class instance path doesn't resolve to an existing directory.
 
 ```ts
