@@ -17,7 +17,7 @@
   - [`resolve()`](#resolve)
   - [`isPath()`](#ispath)
   - [`stringToPath()`](#stringtopath)
-- [Non-static methods](#non-static-methods)
+- [Class methods](#class-methods)
   - [`exists()`](#exists)
   - [`type()`](#type)
   - [`strictType()`](#stricttype)
@@ -128,7 +128,7 @@ exampleFn(anythingTXTString)
 exampleFn(anythingTXTClass)
 ```
 
-# Non-static methods
+# Class methods
 
 ## `exists()`
 

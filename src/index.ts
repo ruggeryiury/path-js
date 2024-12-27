@@ -102,12 +102,34 @@ export default class Path {
    * Relative paths are accepted and they'll be resolved from
    * the current working directory (using `process.cwd()`).
    * - - - -
-   * @param {string[]} paths The paths to be evaluated.
+   * @param {(Path | string)[]} paths The paths to be evaluated. You can't use two or more `Path` class,
+   * and the Path class argument must be the first one, since it's not evaluated to a relative path.
+   *
+   * Not following this rule will result on a `PathJSError`.
    * @returns {Path} A new instantiated `Path` class.
    * @see [PathJS GitHub Repository](https://github.com/ruggeryiury/path-js).
+   * @throws {PathJSError} if two or more `Path` class are used as argument, or the used Path class is the
+   * first argument of the constructor.
    */
-  constructor(...paths: string[]) {
-    this.path = resolve(...paths)
+  constructor(...paths: (Path | string)[]) {
+    const allPaths: string[] = []
+    let hasPathClass = false
+    let pathIndex = 0
+    for (const path of paths) {
+      if (path instanceof Path) {
+        if (hasPathClass) throw new PathJSError("Two or more Path classes can't be used as a Path constructor argument")
+        hasPathClass = true
+        if (pathIndex !== 0) throw new PathJSError('The given Path class argument is not the first argument.')
+        pathIndex++
+        allPaths.push(path.path)
+        continue
+      }
+
+      allPaths.push(path)
+      pathIndex++
+      continue
+    }
+    this.path = resolve(...allPaths)
     this.root = dirname(this.path)
     this.fullname = basename(this.path)
     this.name = basename(this.path, extname(this.path))
