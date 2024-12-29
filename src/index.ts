@@ -191,7 +191,7 @@ export default class Path {
    * @throws {PathJSError} When the path doesn't resolves to an existing file.
    */
   private checkAsFile(operator: string): boolean {
-    if (!lstatSync(this.path).isFile()) throw new PathJSError(`Provided path "${this.path} is not a file to perform file operation Path.${operator}()"`)
+    if (!lstatSync(this.path).isFile()) throw new PathJSError(`Provided path "${this.path}" is not a file to perform file operation Path.${operator}()"`)
     return true
   }
 
@@ -203,7 +203,7 @@ export default class Path {
    * @throws {PathJSError} When the path doesn't resolves to an existing directory.
    */
   private checkAsDirectory(operator: string): boolean {
-    if (!lstatSync(this.path).isDirectory()) throw new PathJSError(`Provided path "${this.path} is not a directory to perform directory operation Path.${operator}()"`)
+    if (!lstatSync(this.path).isDirectory()) throw new PathJSError(`Provided path "${this.path}" is not a directory to perform directory operation Path.${operator}()"`)
     return true
   }
 
@@ -307,7 +307,7 @@ export default class Path {
    * @throws {PathJSError} If the instantiated class path type is not a file.
    */
   changeFileName(newFileName: string | null, newFileExt?: string): string {
-    if (this.isDirPath()) throw new PathJSError(`The path "${this.path}" is not a file to execute Path.changeFileName() operation.`)
+    if (this.isDirPath()) throw new PathJSError(`Provided path "${this.path}" is not a file to execute Path.changeFileName() operation.`)
     return resolve(this.root, `${newFileName ?? this.name}.${newFileExt?.startsWith('.') ? newFileExt.slice(1) : newFileExt ?? this.ext.slice(1)}`)
   }
 
@@ -319,7 +319,7 @@ export default class Path {
    * @throws {PathJSError} If the instantiated class path type is not a file.
    */
   changeFileExt(newFileExt: string): string {
-    if (this.isDirPath()) throw new PathJSError(`The path "${this.path}" is not a file to execute Path.changeFileName() operation.`)
+    if (this.isDirPath()) throw new PathJSError(`Provided path "${this.path}" is not a file to execute Path.changeFileName() operation.`)
     return resolve(this.root, `${this.name}.${newFileExt.startsWith('.') ? newFileExt.slice(1) : newFileExt}`)
   }
 
@@ -331,7 +331,7 @@ export default class Path {
    * @throws {PathJSError} If the instantiated class path type is not a directory.
    */
   changeDirName(newDirName: string): string {
-    if (this.isFilePath()) throw new PathJSError(`The path "${this.path}" is not a directory to execute Path.changeDirName() operation.`)
+    if (this.isFilePath()) throw new PathJSError(`Provided path "${this.path}" is not a directory to execute Path.changeDirName() operation.`)
     return resolve(this.root, newDirName)
   }
 
@@ -507,7 +507,7 @@ export default class Path {
    * @throws {PathJSError} If the instantiated class path type is not a file.
    */
   async checkThenDeleteFile(): Promise<void> {
-    if (this.isDirPath()) throw new PathJSError(`The path "${this.path}" is not a file to execute Path.checkThenDeleteFile() operation.`)
+    if (this.isDirPath()) throw new PathJSError(`Provided path "${this.path}" is not a file to execute Path.checkThenDeleteFile() operation.`)
     if (this.exists()) await this.deleteFile()
   }
 
@@ -518,7 +518,7 @@ export default class Path {
    * @throws {PathJSError} If the instantiated class path type is not a file.
    */
   checkThenDeleteFileSync(): void {
-    if (this.isDirPath()) throw new PathJSError(`The path "${this.path}" is not a file to execute Path.checkThenDeleteFileSync() operation.`)
+    if (this.isDirPath()) throw new PathJSError(`Provided path "${this.path}" is not a file to execute Path.checkThenDeleteFileSync() operation.`)
     if (this.exists()) this.deleteFileSync()
   }
 
