@@ -647,31 +647,6 @@ export default class Path {
     const fileBuffer = await readFile(this.path)
     return fileBuffer.subarray(byteOffset)
   }
-  /**
-   * #### File method:
-   * Works as `Path.readFileOffset()`, but uses an already instantiated `FileHandle` object rather
-   * than create a new instance to automatically close it, saving resources.
-   *
-   * This method doesn't actually read the file resolved on the class instantiated path at all
-   * and it exists only to wrap this functional logic in a common place.
-   * - - - -
-   * @param {FileHandle} handler An already instantiated `FileHandle` object from `fs.promises.open()` function.
-   * @param {number} byteOffset The offset start where the file will be read.
-   * @param {number} byteLength `OPTIONAL` The length of the bytes to want to be read.
-   * If `undefined`, it will read the entire file, starting from the provided offset.
-   * @returns {Promise<Buffer>} A Buffer with the read bytes, from the provided offset and
-   * with the provided length.
-   */
-  async readFileOffsetFromHandler(handler: FileHandle, byteOffset: number, byteLength?: number): Promise<Buffer> {
-    if (byteLength !== undefined) {
-      const buffer = Buffer.alloc(byteLength)
-      await handler.read(buffer, 0, byteLength, byteOffset)
-      return buffer
-    }
-
-    const fileBuffer = await handler.read({ offset: byteOffset })
-    return fileBuffer.buffer
-  }
 
   // #region Directory Methods
 

@@ -43,7 +43,6 @@
   - [`copyFile()` / `copyFileSync()`](#copyfile--copyfilesync)
   - [`createFileWriteStream()`](#createfilewritestream)
   - [`readFileOffset()`](#readfileoffset)
-  - [`readFileOffsetFromHandler()`](#readfileoffsetfromhandler)
 - [Directory methods](#directory-methods)
   - [`createFileOnDir()` | `createFileOnDirSync()`](#createfileondir--createfileondirsync)
   - [`readDir()` / `readDirSync()`](#readdir--readdirsync)
@@ -564,43 +563,6 @@ const filePath = new Path(file)
 // Assuming you want to manipulate the file header and
 // it has a length of 64 bytes (0x40)...
 const fileHeader = await filePath.readFileOffset(0x0, 0x40)
-```
-
-## `readFileOffsetFromHandler()`
-
-Works as `Path.readFileOffset()`, but uses an already instantiated `FileHandle` object rather than create a new instance to automatically close it, saving resources.
-
-This method doesn't actually read the file resolved on the class instantiated path at all and it exists only to wrap this functional logic in a common place.
-
-- Parameters:
-  - **handler** `FileHandle` — An already instantiated `FileHandle` object from `fs.promises.open()` function.
-  - **byteOffset** `number` — The offset start where the file will be read.
-  - **byteLength**_?_ `number` — `OPTIONAL` The length of the bytes to want to be read. If `undefined`, it will read the entire file, starting from the provided offset.
-- Returns: `Buffer`
-
-```ts
-import Path from 'path-js'
-import { open } from 'node:fs/promises'
-
-const file = 'path/to/binary_file.bin'
-const filePath = new Path(file)
-
-// Open the file to create a handler
-const fileHandler = await open(filePath.path)
-
-// Assuming you want to manipulate the file header and
-// it has a length of 64 bytes (0x40)...
-const fileHeader = await filePath.readFileOffsetFromHandler(
-  fileHandler,
-  0x0,
-  0x40
-)
-
-// You can re-use the file handler on some other logic...
-// But don't forget to close it!
-...
-
-fileHandler.close()
 ```
 
 # Directory methods
