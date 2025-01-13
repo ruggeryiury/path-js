@@ -9,3 +9,4 @@ pnpm-lock.yaml
 prettier.config.js
 prod.tsconfig.json
 tsconfig.json
+*.tgz

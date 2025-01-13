@@ -15,7 +15,7 @@
 - [`Path()`](#path)
 - [Static methods](#static-methods)
   - [`resolve()`](#resolve)
-  - [`isPath()`](#ispath)
+  - [`isValidPath()`](#isvalidpath)
   - [`stringToPath()`](#stringtopath)
 - [Class methods](#class-methods)
   - [`exists()`](#exists)
@@ -81,9 +81,9 @@ const file = 'path/to/file.txt'
 const resolvedPath = Path.resolve(file)
 ```
 
-## `isPath()`
+## `isValidPath()`
 
-Checks if a random string is a path that resolves to a file/directory.
+Checks if a string resolves to a file or directory path. Returns `false` if the file does not exist.
 
 - Parameters:
   - **...paths** `string[]` — The paths to be resolved.
@@ -93,7 +93,7 @@ Checks if a random string is a path that resolves to a file/directory.
 import Path from 'path-js'
 
 const file = 'path/to/file.txt'
-const isPath = Path.isPath(file)
+const isValidPath = Path.isValidPath(file)
 ```
 
 ## `stringToPath()`

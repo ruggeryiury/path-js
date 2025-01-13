@@ -128,6 +128,15 @@ export default class Path {
     return resolve(...paths)
   }
   /**
+   * Checks if a string resolves to a file or directory path. Returns `false` if the file does not exist.
+   * - - - -
+   * @param {string[]} paths The paths to be resolved.
+   * @returns {boolean} A boolean value that tells if the provded string resolves to a file or directory path.
+   */
+  static isValidPath(...paths: string[]): boolean {
+    return existsSync(resolve(...paths))
+  }
+  /**
    * Utility function that evaluates path-like variables to an instantiated `Path` class.
    * - - - -
    * @param {StringOrPath} path Any path as string or an instantiated `Path` class.
