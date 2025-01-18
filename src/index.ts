@@ -51,7 +51,7 @@ export type FileSyncWriteDataTypes = string | NodeJS.ArrayBufferView
 /**
  * Types that can be converted using `Path.stringToPath()` static method.
  */
-export type StringOrPath = string | Path | PathJSONRepresentation
+export type PathLikeTypes = string | Path | PathJSONRepresentation
 
 export interface FileWriteStreamReturnObject {
   /**
@@ -139,10 +139,10 @@ export default class Path {
   /**
    * Utility function that evaluates path-like variables to an instantiated `Path` class.
    * - - - -
-   * @param {StringOrPath} path Any path as string or an instantiated `Path` class.
+   * @param {PathLikeTypes} path Any path as string or an instantiated `Path` class.
    * @returns {Path} An instantiated `Path` class.
    */
-  static stringToPath(path: StringOrPath): Path {
+  static stringToPath(path: PathLikeTypes): Path {
     if (path instanceof Path) return path
     else if (typeof path === 'object' && 'path' in path) return new Path(path.path)
     else return new Path(path)
