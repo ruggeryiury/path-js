@@ -1,8 +1,4 @@
 <div align=center>
-<img src='https://raw.githubusercontent.com/ruggeryiury/path-js/main/assets/header.webp' alt='Path-JS: Package Header Image'>
-</div>
-
-<div align=center>
 <img src='https://xesque.rocketseat.dev/platform/tech/javascript.svg' width='36px' title='JavaScript'/> 
 <img src='https://xesque.rocketseat.dev/platform/tech/typescript.svg' width='36px' title='TypeScript'/>
 </div>
@@ -449,7 +445,7 @@ import Path from 'path-js'
 
 const file = 'path/to/file_to_be_deleted.txt'
 const filePath = new Path(file)
-await filePath.unlinkFile()
+await filePath.deleteFile()
 ```
 
 ## `checkThenDeleteFile()` / `checkThenDeleteFileSync()`

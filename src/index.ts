@@ -3,7 +3,7 @@ import { WriteStream, copyFileSync, createWriteStream, existsSync, lstatSync, mk
 import { type FileHandle, copyFile, mkdir, open, readFile, readdir, rename, rm, unlink, writeFile } from 'node:fs/promises'
 import { basename, dirname, extname, isAbsolute, resolve } from 'node:path'
 import { Stream } from 'node:stream'
-import { PathJSError } from './errors.js'
+import { PathJSError } from './errors'
 
 // #region Types
 
@@ -70,7 +70,7 @@ export interface FileWriteStreamReturnObject {
  * - - - -
  * @see [PathJS GitHub Repository](https://github.com/ruggeryiury/path-js).
  */
-export default class Path {
+export class Path {
   /**
    * The working path of this class instance.
    */
@@ -761,4 +761,4 @@ export default class Path {
   }
 }
 
-export * from './errors.js'
+export * from './errors'

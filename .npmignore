@@ -4,9 +4,11 @@ src/
 tests/
 .gitignore
 .npmignore
+.prettierrc
 eslint.config.js
 pnpm-lock.yaml
 prettier.config.js
 prod.tsconfig.json
 tsconfig.json
+tsup.config.js
 *.tgz

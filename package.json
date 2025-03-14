@@ -1,12 +1,12 @@
 {
   "name": "path-js",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "private": true,
   "description": "An utility suite that gathers several functions related to a specific file or directory path.",
   "homepage": "https://github.com/ruggeryiury/path-js#readme",
   "repository": "github:ruggeryiury/path-js",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "Ruggery Iury Corrêa <ruggeryiury@gmail.com>",
@@ -33,8 +33,9 @@
   },
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     }
   },
   "devDependencies": {
