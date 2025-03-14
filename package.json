@@ -1,6 +1,6 @@
 {
   "name": "path-js",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "description": "An utility suite that gathers several functions related to a specific file or directory path.",
   "homepage": "https://github.com/ruggeryiury/path-js#readme",
@@ -25,6 +25,7 @@
   ],
   "scripts": {
     "build": "pnpm run clear && tsc --project ./prod.tsconfig.json",
+    "build:tsup": "tsup",
     "clear": "rimraf dist",
     "dev": "tsx watch ./tests/exec.ts",
     "format": "prettier --write src",
@@ -32,10 +33,16 @@
   },
   "exports": {
     ".": {
-      "import": "./dist/index.js"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "types": {
+        "import": "./dist/index.d.ts",
+        "require": "./dist/index.d.cts"
+      }
     }
   },
   "devDependencies": {
+    "@eslint/js": "^9.22.0",
     "@types/node": "^20.12.12",
     "eslint": "^9.3.0",
     "eslint-import-resolver-typescript": "^3.6.1",
@@ -44,6 +51,7 @@
     "eslint-plugin-n": "^17.7.0",
     "globals": "^15.3.0",
     "prettier": "^3.2.5",
+    "tsup": "^8.4.0",
     "tsx": "^4.10.5",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.9.0"

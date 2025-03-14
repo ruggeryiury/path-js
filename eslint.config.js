@@ -5,8 +5,7 @@ import importPlugin from 'eslint-plugin-import'
 import jsdoc from 'eslint-plugin-jsdoc'
 import n from 'eslint-plugin-n'
 
-/** @type {import('typescript-eslint').ConfigWithExtends} */
-const tseslintConfig = {
+export default tseslint.config({
   languageOptions: {
     parser: tseslint.parser,
     sourceType: 'module',
@@ -19,7 +18,7 @@ const tseslintConfig = {
       ...globals.es2021,
     },
   },
-  files: ['**/*.ts'],
+  files: ['src/**/*.ts'],
   plugins: {
     '@typescript-eslint': tseslint.plugin,
     import: importPlugin,
@@ -43,6 +42,4 @@ const tseslintConfig = {
       },
     ],
   },
-}
-
-export default tseslint.config(tseslintConfig)
+})
