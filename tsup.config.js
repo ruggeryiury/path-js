@@ -1,8 +1,10 @@
 import { defineConfig } from 'tsup'
+import { fixImportsPlugin } from 'esbuild-fix-imports-plugin'
 
 export default defineConfig({
-  entry: ['src/index.ts', 'src/errors.ts'],
-  format: ['cjs', 'esm'],
+  entry: ['src/*.ts'],
+  format: ['esm'],
+  external: ['node:events', 'node:fs', 'node:fs/promises', 'node:path', 'node:stream'],
   splitting: false,
   clean: true,
   dts: true,
@@ -17,9 +19,6 @@ export default defineConfig({
       js: '"use strict";',
     }
   },
-  outExtension({ format }) {
-    return {
-      js: format === 'esm' ? '.mjs' : '.cjs',
-    }
-  },
+  outExtension: () => ({ js: '' }),
+  esbuildPlugins: [fixImportsPlugin()],
 })
