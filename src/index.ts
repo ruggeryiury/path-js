@@ -42,6 +42,8 @@ export interface PathJSONRepresentation {
 }
 
 export type BufferEncodingOrNull = BufferEncoding | null | undefined
+export type BufferEncodingBOM = 'utf8-bom' | 'utf-8-bom' | 'utf8bom' | 'utf16le-bom' | 'utf-16le-bom' | 'utf16bom'
+export type BufferEncodingTypes = BufferEncodingOrNull | BufferEncodingBOM
 
 export type ReadFileReturnType<RT extends BufferEncodingOrNull> = RT extends BufferEncoding ? string : RT extends null | undefined ? Buffer : string | Buffer
 
@@ -429,12 +431,29 @@ export class Path {
 
   /**
    * #### File method:
+   * Asynchronously creates a new file with a Byte-Order Mark (BOM) and the provided data and returns the created file path.
+   * - - - -
+   * @param {string | Buffer} data The content you want to write.
+   * @param {BufferEncodingBOM} encoding `OPTIONAL` The encoding of the content. If no argument is provided, the file will be saved as UTF-8 with BOM.
+   * @returns {Promise<string>} The path of the created file.
+   * @throws {PathJSError} If an error occurs on the file writing process.
+   */
+  async writeFileWithBOM(data: string | Buffer, encoding?: BufferEncodingBOM): Promise<string> {
+    if (this.exists()) await this.deleteFile()
+    const content = '\ufeff' + data.toString()
+    if (encoding === 'utf-8-bom' || encoding === 'utf8-bom' || encoding === 'utf8bom' || !encoding) await writeFile(this.path, content, 'utf8')
+    else await writeFile(this.path, content, 'utf16le')
+    return this.path
+  }
+
+  /**
+   * #### File method:
    * Asynchronously creates a new file with provided data and returns the created file path.
    * - - - -
    * @param {FileAsyncWriteDataTypes} data The content you want to write.
    * @param {BufferEncodingOrNull} encoding `OPTIONAL` The encoding of the content.
-   * @returns {Promise<string>} The path of the actual created file.
-   * @throws {Error} If an error occurs on the file writing process.
+   * @returns {Promise<string>} The path of the created file.
+   * @throws {PathJSError} If an error occurs on the file writing process.
    */
   async writeFile(data: FileAsyncWriteDataTypes, encoding?: BufferEncodingOrNull): Promise<string> {
     if (this.exists()) await this.deleteFile()
@@ -444,12 +463,29 @@ export class Path {
 
   /**
    * #### File method:
+   * Synchronously creates a new file with a Byte-Order Mark (BOM) and the provided data and returns the created file path.
+   * - - - -
+   * @param {string | Buffer} data The content you want to write.
+   * @param {BufferEncodingBOM} encoding `OPTIONAL` The encoding of the content. If no argument is provided, the file will be saved as UTF-8 with BOM.
+   * @returns {string} The path of the created file.
+   * @throws {PathJSError} If an error occurs on the file writing process.
+   */
+  writeFileWithBOMSync(data: string | Buffer, encoding?: BufferEncodingBOM): string {
+    if (this.exists()) this.deleteFileSync()
+    const content = '\ufeff' + data.toString()
+    if (encoding === 'utf-8-bom' || encoding === 'utf8-bom' || encoding === 'utf8bom' || !encoding) writeFileSync(this.path, content, 'utf8')
+    else writeFileSync(this.path, content, 'utf16le')
+    return this.path
+  }
+
+  /**
+   * #### File method:
    * Synchronously creates a new file with provided data and returns the created file path.
    * - - - -
    * @param {FileSyncWriteDataTypes} data The content you want to write.
    * @param {BufferEncodingOrNull} encoding `OPTIONAL` The encoding of the content.
-   * @returns {string} The path of the actual created file.
-   * @throws {Error} If an error occurs on the file writing process.
+   * @returns {string} The path of the created file.
+   * @throws {PathJSError} If an error occurs on the file writing process.
    */
   writeFileSync(data: FileSyncWriteDataTypes, encoding?: BufferEncodingOrNull): string {
     if (this.exists()) this.deleteFileSync()

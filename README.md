@@ -33,6 +33,7 @@
   - [`readFile()` / `readFileSync()`](#readfile--readfilesync)
   - [`readJSONFile()` / `readJSONFileSync()`](#readjsonfile--readjsonfilesync)
   - [`writeFile()` / `writeFileSync()`](#writefile--writefilesync)
+  - [`writeFileWithBOM()` / `writeFileWithBOMSync()`](#writefilewithbom--writefilewithbomsync)
   - [`deleteFile()` / `deleteFileSync()`](#deletefile--deletefilesync)
   - [`checkThenDeleteFile()` / `checkThenDeleteFileSync()`](#checkthendeletefile--checkthendeletefilesync)
   - [`renameFile()` / `renameFileSync()`](#renamefile--renamefilesync)
@@ -421,8 +422,8 @@ Creates a new file with provided data and returns the created file path.
 - Parameters:
   - **data** `FileWriteDataTypes` — The content you want to write.
   - **encoding**_?_ `BufferEncodingOrNull` — `OPTIONAL` The encoding of the content.
-- Returns: `string`
-- Throws: `Error` if an error occurs on the file writing process.
+- Returns: `string` — The path of the created file.
+- Throws: `PathJSError` if an error occurs on the file writing process.
 
 ```ts
 import Path from 'path-js'
@@ -433,6 +434,16 @@ const filePath = new Path(file)
 const fileNewContents = 'example text'
 await filePath.writeFile(fileNewContents, 'utf8')
 ```
+
+## `writeFileWithBOM()` / `writeFileWithBOMSync()`
+
+Creates a new file with a Byte-Order Mark (BOM) and the provided data and returns the created file path.
+
+- Parameters:
+  - **data** `string | Buffer` — The content you want to write.
+  - **encoding**_?_ `BufferEncodingBOM` — `OPTIONAL` The encoding of the content. If no argument is provided, the file will be saved as UTF-8 with BOM.
+- Returns: `string` — The path of the created file.
+- Throws: `PathJSError` if an error occurs on the file writing process.
 
 ## `deleteFile()` / `deleteFileSync()`
 
