@@ -139,6 +139,28 @@ export class Path {
     return existsSync(resolve(...paths))
   }
   /**
+   * Checks if the provided path is absolute.
+   * - - - -
+   * @param {StringOrPath} path The path to be checked.
+   * @returns {boolean} A boolean value that tells if the provided path is absolute.
+   */
+  static isAbsolute(path: PathLikeTypes): boolean {
+    if (path instanceof Path) return true
+    else if (typeof path === 'object') return isAbsolute(path.path)
+    return isAbsolute(path)
+  }
+  /**
+   * Checks if the provided path is relative.
+   * - - - -
+   * @param {StringOrPath} path The path to be checked.
+   * @returns {boolean} A boolean value that tells if the provided path is relative.
+   */
+  static isRelative(path: PathLikeTypes): boolean {
+    if (path instanceof Path) return false
+    else if (typeof path === 'object') return !isAbsolute(path.path)
+    return isAbsolute(path)
+  }
+  /**
    * Utility function that evaluates path-like variables to an instantiated `Path` class.
    * - - - -
    * @param {PathLikeTypes} path Any path as string or an instantiated `Path` class.

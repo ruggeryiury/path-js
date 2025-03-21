@@ -12,6 +12,7 @@
 - [Static methods](#static-methods)
   - [`resolve()`](#resolve)
   - [`isValidPath()`](#isvalidpath)
+  - [`isAbsolute` | `isRelative()`](#isabsolute--isrelative)
   - [`stringToPath()`](#stringtopath)
 - [Class methods](#class-methods)
   - [`exists()`](#exists)
@@ -93,20 +94,30 @@ const file = 'path/to/file.txt'
 const isValidPath = Path.isValidPath(file)
 ```
 
+## `isAbsolute` | `isRelative()`
+
+These funcions check if the provided path is absolute or relative, respectivelly.
+
+- Parameters:
+
+  - **path** `PathLikeTypes` — The path to be checked.
+
+- Returns: `boolean` A boolean value that tells if the provided path is absolute or relative.
+
 ## `stringToPath()`
 
 Utility function that evaluates path-like variables to an instantiated `Path` class.
 
 - Parameters:
 
-  - **path** `StringOrPath` — Any path as string or an instantiated `Path` class.
+  - **path** `PathLikeTypes` — Any path as string or an instantiated `Path` class.
 
 - Returns: `Path` An instantiated `Path` class.
 
 ```ts
 // You can create functions where it can accept both
-// string and instantiated Path classes using the StringOrPath type!
-const exampleFn = (srcPath: StringOrPath) => {
+// string and instantiated Path classes using the PathLikeTypes type!
+const exampleFn = (srcPath: PathLikeTypes) => {
   // You can pass string or instantiated Path classes that will return
   // an instantiated Path class of the provided path.
   const src = Path.stringToPath(srcPath)
