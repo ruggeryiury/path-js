@@ -44,6 +44,7 @@ export interface PathJSONRepresentation {
 export type BufferEncodingOrNull = BufferEncoding | null | undefined
 export type BufferEncodingBOM = 'utf8-bom' | 'utf-8-bom' | 'utf8bom' | 'utf16le-bom' | 'utf-16le-bom' | 'utf16bom'
 export type BufferEncodingTypes = BufferEncodingOrNull | BufferEncodingBOM
+export type BufferEncodingText = 'ascii' | 'latin1' | 'utf8' | 'utf-8' | undefined
 
 export type ReadFileReturnType<RT extends BufferEncodingOrNull> = RT extends BufferEncoding ? string : RT extends null | undefined ? Buffer : string | Buffer
 
@@ -415,6 +416,36 @@ export class Path {
 
   /**
    * #### File method:
+   * Asynchronously reads a file contents and split the string on new line characters.
+   * - - - -
+   * @param {RT} encoding `OPTIONAL` The encoding of the file. If `undefined`, the text file will be decoded as `utf-8`.
+   * @returns {Promise<string[]>} The contents of the file splitted in an Array of strings.
+   * @throws {PathJSError} If the class instance path doesn't resolve to an existing file.
+   */
+  async readLines<RT extends BufferEncodingText>(encoding?: RT): Promise<string[]> {
+    this.checkExistence('readLines', 'file')
+    this.checkAsFile('readLines')
+    const content = await readFile(this.path, encoding)
+    return Buffer.isBuffer(content) ? content.toString(encoding).replace(/\r/g, '').split('\n') : content.replace(/\r/g, '').split('\n')
+  }
+
+  /**
+   * #### File method:
+   * Synchronously reads a file contents and split the string on new line characters.
+   * - - - -
+   * @param {RT} encoding `OPTIONAL` The encoding of the file. If `undefined`, the text file will be decoded as `utf-8`.
+   * @returns {Promise<string[]>} The contents of the file splitted in an Array of strings.
+   * @throws {PathJSError} If the class instance path doesn't resolve to an existing file.
+   */
+  readLinesSync<RT extends BufferEncodingText>(encoding?: RT): string[] {
+    this.checkExistence('readLinesSync', 'file')
+    this.checkAsFile('readLinesSync')
+    const content = readFileSync(this.path, encoding)
+    return Buffer.isBuffer(content) ? content.toString(encoding).replace(/\r/g, '').split('\n') : content.replace(/\r/g, '').split('\n')
+  }
+
+  /**
+   * #### File method:
    * Asynchronously reads a JSON file and automatically parses the JSON file to JavaScript Object.
    * - - - -
    * @param {BufferEncoding | undefined} encoding `OPTIONAL` The encoding of the file. Default is `'utf-8'`.
@@ -423,6 +454,8 @@ export class Path {
    * @throws {PathJSError} If there's any known error on the parsing process.
    */
   async readJSONFile<T>(encoding: BufferEncoding = 'utf-8'): Promise<T> {
+    this.checkExistence('readJSONFile', 'file')
+    this.checkAsFile('readJSONFile')
     const contents = await readFile(this.path, encoding)
     try {
       return JSON.parse(Buffer.isBuffer(contents) ? contents.toString(encoding) : contents) as T
@@ -442,6 +475,8 @@ export class Path {
    * @throws {PathJSError} If there's any known error on the parsing process.
    */
   readJSONFileSync<T>(encoding: BufferEncoding = 'utf-8'): T {
+    this.checkExistence('readJSONFileSync', 'file')
+    this.checkAsFile('readJSONFileSync')
     const contents = readFileSync(this.path, encoding)
     try {
       return JSON.parse(Buffer.isBuffer(contents) ? contents.toString(encoding) : contents) as T
@@ -461,6 +496,8 @@ export class Path {
    * @throws {PathJSError} If an error occurs on the file writing process.
    */
   async writeFileWithBOM(data: string | Buffer, encoding?: BufferEncodingBOM): Promise<string> {
+    this.checkExistence('writeFileWithBOM', 'file')
+    this.checkAsFile('writeFileWithBOM')
     if (this.exists()) await this.deleteFile()
     const content = '\ufeff' + data.toString()
     if (encoding === 'utf-8-bom' || encoding === 'utf8-bom' || encoding === 'utf8bom' || !encoding) await writeFile(this.path, content, 'utf8')
@@ -478,6 +515,8 @@ export class Path {
    * @throws {PathJSError} If an error occurs on the file writing process.
    */
   async writeFile(data: FileAsyncWriteDataTypes, encoding?: BufferEncodingOrNull): Promise<string> {
+    this.checkExistence('writeFile', 'file')
+    this.checkAsFile('writeFile')
     if (this.exists()) await this.deleteFile()
     await writeFile(this.path, data, encoding)
     return this.path
@@ -493,6 +532,8 @@ export class Path {
    * @throws {PathJSError} If an error occurs on the file writing process.
    */
   writeFileWithBOMSync(data: string | Buffer, encoding?: BufferEncodingBOM): string {
+    this.checkExistence('writeFileWithBOMSync', 'file')
+    this.checkAsFile('writeFileWithBOMSync')
     if (this.exists()) this.deleteFileSync()
     const content = '\ufeff' + data.toString()
     if (encoding === 'utf-8-bom' || encoding === 'utf8-bom' || encoding === 'utf8bom' || !encoding) writeFileSync(this.path, content, 'utf8')
@@ -510,6 +551,8 @@ export class Path {
    * @throws {PathJSError} If an error occurs on the file writing process.
    */
   writeFileSync(data: FileSyncWriteDataTypes, encoding?: BufferEncodingOrNull): string {
+    this.checkExistence('writeFileSync', 'file')
+    this.checkAsFile('writeFileSync')
     if (this.exists()) this.deleteFileSync()
     writeFileSync(this.path, data, encoding)
     return this.path
